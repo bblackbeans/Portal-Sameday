@@ -1,0 +1,34 @@
+<h3 mat-dialog-title>
+  <mat-icon>person</mat-icon> Dados do motorista
+</h3>
+<div mat-dialog-content>
+  <mat-list role="list">
+    <mat-list-item role="listitem">
+      <mat-icon>drive_eta</mat-icon><strong mat-body-strong>Motorista</strong>: {{ data.driverName }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon>alternate_email</mat-icon><strong mat-body-strong>E-mail</strong>: {{ data.driverMail }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon>contacts</mat-icon><strong mat-body-strong>CPF/CNPJ</strong>: {{ data.driverDocument | cnpj_cpf }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon>phone</mat-icon><strong mat-body-strong>Telefone</strong>: {{ data.driverPhone | phone }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon> directions_run</mat-icon><strong mat-body-strong>Entregas</strong>: {{ data.idOrder }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon>timeline</mat-icon><strong mat-body-strong>Total de entregas</strong>: {{ data.qtdOrders }}
+    </mat-list-item>
+    <mat-list-item role="listitem">
+      <mat-icon>location_on</mat-icon><strong mat-body-strong>Quilômetros rodados</strong>: {{ data.totalKms | converToKilometers }}
+    </mat-list-item>
+    <mat-list-item role="listitem" *ngIf="data.totalTimeDelivery">
+      <mat-icon>access_time</mat-icon><strong mat-body-strong>Tempo de entrega</strong>: {{ data.totalTimeDelivery | converToHours }}
+    </mat-list-item>
+  </mat-list>
+</div>
+<div mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="onNoClick()">OK</button>
+</div>
