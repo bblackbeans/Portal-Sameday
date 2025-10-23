@@ -1,0 +1,40 @@
+<div class="login container">
+    <div class="text-center logo"></div>
+    <div class="card">
+        <h1 class="title">Entrar <div class="msg">Insira suas credenciais</div></h1>
+        <div class="col-md-12">
+            <div class="col-12">
+                <!-- Login -->
+                <mat-form-field appearance="outline">
+                    <mat-icon matPrefix>person</mat-icon>
+                    <mat-label>CPF / CNPJ</mat-label>
+                    <input type="text" matInput [(ngModel)]="auth.username" mask="CPF_CNPJ" autocomplete="off" required>
+                </mat-form-field>
+
+                <!-- Password -->
+                <mat-form-field appearance="outline">
+                    <mat-icon matPrefix (click)="showPassword = !showPassword">{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+                    <mat-label>Senha</mat-label>
+                    <input matInput [type]="showPassword ? 'text' : 'password'" [(ngModel)]="auth.password" autocomplete="off" required>
+                </mat-form-field>
+
+                <div class="button-container">
+                    <div class="spinner-container" *ngIf="loading">
+                        <mat-spinner diameter="24"></mat-spinner>
+                    </div>
+                    <button [disabled]="!isValid() || loading" (click)="isValid() ? onSubmit() : null" class="btn btn-custom">Entrar</button>
+                </div>
+
+                <!-- Forgot Password -->
+                <div class="text-center forgot-password">
+                    <a class="link" (click)="navigateTo('forgot-password')">Esqueceu sua senha? / </a>
+                    <a class="link" (click)="navigateTo('register')">Cadastre-se</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-center copyright">
+        &copy; Copyright Same Day {{ fullYear }} - Todos os direitos reservados.
+    </div>   
+    <div class="loginversao">v: {{ loginVersion }}</div>
+</div>
