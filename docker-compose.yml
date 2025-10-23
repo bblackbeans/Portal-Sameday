@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  sameday-portal:
+    build: .
+    ports:
+      - "80:80"
+    environment:
+      - NODE_ENV=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Serviço opcional para desenvolvimento
+  sameday-portal-dev:
+    build: .
+    ports:
+      - "4200:80"
+    environment:
+      - NODE_ENV=development
+    volumes:
+      - ./src:/usr/share/nginx/html/src:ro
+    profiles:
+      - dev
+
