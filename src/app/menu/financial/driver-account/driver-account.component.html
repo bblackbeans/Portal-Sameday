@@ -1,0 +1,150 @@
+<div class="identification-container">
+  <div *ngIf="pageLoading" class="center">
+      <div class="pageLoading">
+          <mat-spinner></mat-spinner>
+      </div>
+      <p>Carregando...</p>
+  </div>
+
+  <div [hidden]="pageLoading" class="card container-fluid">
+      <h2 class="centralize">
+          <span >
+              Cadastrar conta
+          </span>
+      </h2>
+
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+          
+          <div >
+            
+            <!-- <fieldset>
+                <legend>Capacidade de carga</legend>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Largura</mat-label>
+                            <input type="number" matInput  autocomplete="off" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Largura - Conversão</mat-label>
+                            <mat-select   required>
+                                <mat-option value="metros">Metros [m]</mat-option>
+                                <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Altura</mat-label>
+                            <input type="number" matInput  autocomplete="off" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Altura - Conversão</mat-label>
+                            <mat-select  required>
+                                <mat-option value="metros">Metros [m]</mat-option>
+                                <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Comprimento</mat-label>
+                            <input type="number" matInput autocomplete="off" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Comprimento - Conversão</mat-label>
+                            <mat-select  required>
+                                <mat-option value="metros">Metros [m]</mat-option>
+                                <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Peso</mat-label>
+                            <input type="number" matInput  autocomplete="off" min="1" max="70" maxlength="2" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Peso - Conversão</mat-label>
+                            <mat-select  required>
+                                <mat-option value="gramas">Gramas [g]</mat-option>
+                                <mat-option value="quilogramas">Quilogramas [kg]</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                </div>
+            </fieldset> -->
+          </div>
+
+          <fieldset>
+              <legend>Banco</legend>
+              <div class="row">
+
+                <div class="col-xs-12 col-sm-4 col-md-12 col-lg-12">
+                  <mat-form-field appearance="outline">
+                      <mat-label>Chave PIX</mat-label>
+                      <input type="email" matInput  autocomplete="off" 
+                          [(ngModel)]="bankData.agency"
+                         required>
+                  </mat-form-field>
+              </div>
+
+                <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Tipo da conta</mat-label>
+                        <mat-select  required>
+                            <mat-option value="corrente">Corrente</mat-option>
+                            <mat-option value="poupanca">Poupança</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+                  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                      <mat-form-field appearance="outline">
+                          <mat-label>Banco</mat-label>
+                          <input type="text" matInput 
+                              mask="(00) 0000-0000||(00) 0 0000-0000" autocomplete="off" 
+                              [(ngModel)]="bankData.bank"
+                             required>
+                      </mat-form-field>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-3">
+                      <mat-form-field appearance="outline">
+                          <mat-label>Agência</mat-label>
+                          <input type="email" matInput  autocomplete="off" 
+                              [(ngModel)]="bankData.agency"
+                             required>
+                      </mat-form-field>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                      <mat-form-field appearance="outline">
+                          <mat-label>Conta</mat-label>
+                          <input type="text" matInput  autocomplete="off"
+                            [(ngModel)]="bankData.account" >
+                      </mat-form-field>
+                  </div>
+                  <div class="col-xs-12 col-sm-6 col-md-2 col-lg-2">
+                      <mat-form-field appearance="outline">
+                          <mat-label>Dig. da conta</mat-label>
+                          <input type="text" matInput 
+                              mask="00" autocomplete="off" 
+                              [(ngModel)]="bankData.accountDigit"
+                             required>
+                      </mat-form-field>
+                  </div>
+              </div>
+              <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions" style="right: -15px;">
+                <button mat-raised-button color="primary" class="right" >Salvar</button>
+              </div>
+          </fieldset>
+
+      </div>
+  </div>
+</div>

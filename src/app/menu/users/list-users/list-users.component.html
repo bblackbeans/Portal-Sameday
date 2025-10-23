@@ -1,0 +1,131 @@
+<div *ngIf="pageLoading" class="center">
+    <div class="pageLoading">
+        <mat-spinner></mat-spinner>
+    </div>
+    <p>Carregando usuários...</p>
+</div>
+<div [hidden]="pageLoading">
+    <div *ngIf="!listLoading" class="statusCard">
+        <!-- P. Física -->
+        <div matTooltip="Pessoa Física" matTooltipPosition="above" class="statusUser col-xs-12"
+            (click)="applyFilter('client')">
+            <mat-icon>supervisor_account</mat-icon>
+            <br /> {{ totals?.statusUser }}
+        </div>
+        <!-- P. Jurídica -->
+        <div matTooltip="Pessoa Jurídica" matTooltipPosition="above" class="statusBusiness col-xs-12"
+            (click)="applyFilter('business')">
+            <mat-icon>business</mat-icon>
+            <br /> {{ totals?.statusBusiness }}
+        </div>
+        <!-- Motorista -->
+        <div matTooltip="Motorista" matTooltipPosition="above" class="statusDriver col-xs-12"
+            (click)="applyFilter('driver', 'driverFather')">
+            <mat-icon>local_shipping</mat-icon>
+            <br /> {{ totals?.statusDriver }}
+        </div>
+        <div matTooltip="Todos" matTooltipPosition="above" class="statusAll col-xs-12" (click)="applyFilter('')">
+            <mat-icon>supervised_user_circle</mat-icon>
+            <br /> {{ totals?.statusAll }}
+        </div>
+    </div>
+    <div *ngIf="!listLoading && selectedDriver" class="statusCard">
+        <!-- Driver Ativo -->
+        <div matTooltip="Motorista documentos valido" matTooltipPosition="above" class="statusAtivo col-xs-12"
+            (click)="applyFilter('validDriver', 'driverSon')">
+            <mat-icon>assignment_turned_in</mat-icon>
+            <br /> {{ totals?.driverDocValido }}
+        </div>
+        <!-- Driver Inativo -->
+        <div matTooltip="Motorista documentos inválido" matTooltipPosition="above" class="statusInativo col-xs-12"
+            (click)="applyFilter('invalidDriver', 'driverSon')">
+            <mat-icon>assignment_late</mat-icon>
+            <br /> {{ totals?.driverDocInvalido }}
+        </div>
+    </div>
+    <div class="card card-stats standard-table">
+        <div class="actionMenu">
+            <button (click)="reload()" mat-fab color="white">
+                <mat-icon matTooltip="Atualizar" matTooltipPosition="above">refresh</mat-icon>
+            </button>
+            <button (click)="editUser()" mat-fab color="white">
+                <mat-icon matTooltip="Novo Usuário" matTooltipPosition="above">add</mat-icon>
+            </button>
+        </div>
+        <div class="standard-input-filter">
+            <mat-form-field>
+                <input matInput placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(search.value)" #search>
+                <button mat-button *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear"
+                    (click)="applyFilter(search.value='')">
+                    <mat-icon>close</mat-icon>
+                </button>
+            </mat-form-field>
+        </div>
+        <div class="mat-elevation-z8">
+            <mat-progress-bar *ngIf="listLoading" mode="query"></mat-progress-bar>
+            <mat-table [hidden]="listLoading" #sort="matSort" [dataSource]="dataSource" cellspacing="0" width="100%"
+                matSort>
+                <!-- Type User -->
+                <ng-container matColumnDef="typeUser">
+                    <mat-header-cell style="width: 10%;" *matHeaderCellDef mat-sort-header> Tipo </mat-header-cell>
+                    <mat-cell style="width: 10%;" *matCellDef="let row">
+                        <span class="status {{ loadCssStatus(row?.typeUser) }}"></span>
+                    </mat-cell>
+                </ng-container>
+                <!-- Name -->
+                <ng-container matColumnDef="name">
+                    <mat-header-cell style="width: 30%;" *matHeaderCellDef mat-sort-header>
+                        Nome / Razão Social
+                    </mat-header-cell>
+                    <mat-cell style="width: 30%;" *matCellDef="let row">
+                        <span class="cursorPointer" matTooltip="{{ row?.name }}" matTooltipPosition="right">
+                            {{row.name | shortenName}}
+                        </span>
+                    </mat-cell>
+                </ng-container>
+                <!-- CPF / CNPJ -->
+                <ng-container matColumnDef="cpfcnpj">
+                    <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header> CPF / CNPJ
+                    </mat-header-cell>
+                    <mat-cell style="width: 20%;" *matCellDef="let row"> {{row.cpfcnpj | cnpj_cpf}} </mat-cell>
+                </ng-container>
+                <!-- Phone -->
+                <ng-container matColumnDef="phone">
+                    <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header> Telefone
+                    </mat-header-cell>
+                    <mat-cell style="width: 20%;" *matCellDef="let row"> {{row.phone | phone}} </mat-cell>
+                </ng-container>
+                <!-- Status -->
+                <ng-container matColumnDef="status">
+                    <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header> Status
+                    </mat-header-cell>
+                    <mat-cell style="width: 20%;" *matCellDef="let row"> {{row.status === 'active' ? 'Ativado' : 'Desativado'}} </mat-cell>
+                </ng-container>
+                <!-- Actions -->
+                <ng-container matColumnDef="actions">
+                    <mat-header-cell style="padding-right: 28px !important;" *matHeaderCellDef>Ações</mat-header-cell>
+                    <mat-cell *matCellDef="let row">
+                        <mat-icon *ngIf="row?.typeUser === 'driver' && row?.documentsValidated === 'invalidDriver'" matTooltip="Validar Motorista" 
+                            matTooltipPosition="left" (click)="validateDriver(row)">search
+                        </mat-icon>
+                        <mat-icon class="edit-icon" matTooltip="Editar" matTooltipPosition="left"
+                            (click)="editUser(row?.id)">edit
+                        </mat-icon>
+                        <mat-icon class="delete-icon" matTooltip="Excluir" matTooltipPosition="left"
+                            (click)="deleteUser(row?.id)">delete
+                        </mat-icon>
+                    </mat-cell>
+                </ng-container>
+                <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                <tr class="mat-row" *matNoDataRow>
+                    <td class="mat-cell center" [attr.colspan]="displayedColumns.length">
+                        Nenhum usuário encontrado!
+                    </td>
+                </tr>
+            </mat-table>
+            <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+            </mat-paginator>
+        </div>
+    </div>
+</div>

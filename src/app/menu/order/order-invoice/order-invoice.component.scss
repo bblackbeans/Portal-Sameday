@@ -1,0 +1,51 @@
+.qrcode-image {
+  margin: 20px auto;
+  box-shadow: 0 1px 8px 0 rgb(0 0 0 / 35%);
+}
+
+
+.clipboard-btn {
+  display: flex;
+  border: 2px solid #d9d9d9;
+  border-radius: 8px;
+  padding: 20px 40px;
+  width: 50%;
+  margin: 15px auto;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+  color: #d9d9d9;
+  transition: all 0.15s ease;
+}
+.clipboard-btn:hover {
+  -webkit-transform: translateY(-1px);
+          transform: translateY(-1px);
+}
+.clipboard-btn.active {
+  color: #45094e;
+  font-weight: 600;
+  background: #f9ecfb;
+  border-color: #a61bd3;
+  font-size: 14pt;
+}
+.clipboard-btn .icon {
+  font-size: 32px;
+  margin-right: 10px;
+}
+.clipboard-btn + .clipboard-btn {
+  margin-left: 10px;
+}
+
+.box-message {
+
+  width: 500px;
+  margin: auto;
+  
+  h4 {
+    font-weight: 500;
+  }
+}
+
+.bold {
+  font-weight: 600;
+}

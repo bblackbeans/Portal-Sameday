@@ -1,0 +1,431 @@
+<div class="new-order">
+    <div *ngIf="pageLoading" class="center">
+        <div class="pageLoading">
+            <mat-spinner></mat-spinner>
+        </div>
+        <p>Carregando...</p>
+    </div>
+    <mat-horizontal-stepper [hidden]="pageLoading" linear #stepper>
+        <mat-step>
+            <ng-template matStepLabel>RETIRADA</ng-template>
+            <div class="container">
+                <div class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                    <div class="row centralize">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <button (click)="typeUser('collectionSite', 'client')" class="btn btn-custom">Pessoa Fisíca</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <button (click)="typeUser('collectionSite', 'business')" class="btn btn-custom">Pessoa Jurídica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="newOrder?.collectionSite?.typeUser" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-6 offset-md-3 col-md-2 offset-md-5 col-lg-2 offset-lg-5">
+                    <button (click)="getHistoric('collectionSite')" class="btn btn-custom">Histórico</button>
+                </div>
+                <fieldset>
+                    <legend>Dados</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label *ngIf="newOrder?.collectionSite?.typeUser === 'client'">CPF</mat-label>
+                                <mat-label *ngIf="newOrder?.collectionSite?.typeUser === 'business'">CNPJ</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.cpfcnpj"
+                                    [mask]="mask_collectionSite_cpf_cnpj" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label *ngIf="newOrder?.collectionSite?.typeUser === 'client'">Nome Completo</mat-label>
+                                <mat-label *ngIf="newOrder?.collectionSite?.typeUser === 'business'">Razão Social</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.name" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="newOrder?.collectionSite?.typeUser === 'business'" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nome Fantasia</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.fantasyName" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Telefone</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.phone" autocomplete="off" 
+                                    mask="(00) 0000-0000||(00) 0 0000-0000" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>E-mail</mat-label>
+                                <input type="email" matInput [(ngModel)]="newOrder.collectionSite.email" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="{{ loadCssStatus(loading_collectionSite_zipCode, 'collectionSite', 'content') }}">
+                    <legend>Endereço</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>CEP</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.zipCode" mask="00000-000" 
+                                    autocomplete="off" required>
+                                <a (click)="searchZipCode('collectionSite')" class="cursorPointer" matSuffix>
+                                    <mat-icon>search</mat-icon>
+                                </a>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Endereço</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.address" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Complemento</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.complement" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Número</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.number" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Bairro</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.district" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Cidade</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.city" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>UF</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.collectionSite.state" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="loading_collectionSite_zipCode" class="{{ loadCssStatus(loading_collectionSite_zipCode, 'collectionSite', 'overlay') }}">
+                        <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions">
+                <span *ngIf="newOrder?.collectionSite?.typeUser">
+                    <button mat-raised-button color="primary" class="right" (click)="nextTab(stepper, 'collectionSite')">Próximo</button>
+                </span>
+                <button mat-raised-button class="right" [routerLink]="['/order/list']">Voltar</button>
+            </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>OBJETO</ng-template>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <fieldset *ngFor="let item of newOrder.items; let i = index">
+                    <legend>{{ i + 1 }}° Objeto</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nome</mat-label>
+                                <input type="text" matInput [(ngModel)]="item.name" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Modelo</mat-label>
+                                <input type="text" matInput [(ngModel)]="item.model" autocomplete="off">
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Largura</mat-label>
+                                <input type="number" matInput [(ngModel)]="item.width" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Largura - Conversão</mat-label>
+                                <mat-select [(ngModel)]="item.conversion_width" required>
+                                    <mat-option value="metros">Metros [m]</mat-option>
+                                    <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Altura</mat-label>
+                                <input type="number" matInput [(ngModel)]="item.height" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Altura - Conversão</mat-label>
+                                <mat-select [(ngModel)]="item.conversion_height" required>
+                                    <mat-option value="metros">Metros [m]</mat-option>
+                                    <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comprimento</mat-label>
+                                <input type="number" matInput [(ngModel)]="item.length" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Comprimento - Conversão</mat-label>
+                                <mat-select [(ngModel)]="item.conversion_length" required>
+                                    <mat-option value="metros">Metros [m]</mat-option>
+                                    <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Peso</mat-label>
+                                <input type="number" matInput [(ngModel)]="item.weight" autocomplete="off" min="1" max="70" maxlength="2" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Peso - Conversão</mat-label>
+                                <mat-select [(ngModel)]="item.conversion_weight" required>
+                                    <mat-option value="gramas">Gramas [g]</mat-option>
+                                    <mat-option value="quilogramas">Quilogramas [kg]</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-6 col-sm-3 col-md-2 col-lg-2">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Quantidade</mat-label>
+                                <input type="number" matInput [(ngModel)]="item.quantity" autocomplete="off" min="1" max="999" required>
+                            </mat-form-field>
+                        </div>
+
+                        <div *ngIf="newOrder.items.length && newOrder.items.length > 1" class="col-12 d-flex flex-row-reverse">
+                            <button class="btn btn-danger" (click)="removeItem(i)">
+                                <mat-icon matTooltip="Remover Objeto" matTooltipPosition="left">delete</mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-12 d-flex flex-row-reverse">
+                <button class="btn btn-ouline-primary" (click)="addItem()">Adicionar</button>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions">
+                <button mat-raised-button color="primary" class="right" (click)="nextTab(stepper, 'items')">Próximo</button>
+                <button mat-raised-button class="right" matStepperPrevious>Voltar</button>
+            </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>DESTINO</ng-template>
+            <div class="container">
+                <div class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                    <div class="row centralize">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <button (click)="typeUser('deliveryPlace', 'client')" class="btn btn-custom">Pessoa Fisíca</button>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <button (click)="typeUser('deliveryPlace', 'business')" class="btn btn-custom">Pessoa Jurídica</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div *ngIf="newOrder?.deliveryPlace?.typeUser" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                <div class="col-xs-12 col-sm-6 offset-md-3 col-md-2 offset-md-5 col-lg-2 offset-lg-5">
+                    <button (click)="getHistoric('deliveryPlace')" class="btn btn-custom">Histórico</button>
+                </div>
+                <fieldset>
+                    <legend>Dados</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label *ngIf="newOrder?.deliveryPlace?.typeUser === 'client'">CPF</mat-label>
+                                <mat-label *ngIf="newOrder?.deliveryPlace?.typeUser === 'business'">CNPJ</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.cpfcnpj"
+                                    [mask]="mask_deliveryPlace_cpf_cnpj" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label *ngIf="newOrder?.deliveryPlace?.typeUser === 'client'">Nome Completo</mat-label>
+                                <mat-label *ngIf="newOrder?.deliveryPlace?.typeUser === 'business'">Razão Social</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.name" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div *ngIf="newOrder?.deliveryPlace?.typeUser === 'business'" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Nome Fantasia</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.fantasyName" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Telefone</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.phone" autocomplete="off" 
+                                    mask="(00) 0000-0000||(00) 0 0000-0000" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>E-mail</mat-label>
+                                <input type="email" matInput [(ngModel)]="newOrder.deliveryPlace.email" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </fieldset>
+
+                <fieldset class="{{ loadCssStatus(loading_deliveryPlace_zipCode, 'deliveryPlace', 'content') }}">
+                    <legend>Endereço</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>CEP</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.zipCode" mask="00000-000" 
+                                    autocomplete="off" required>
+                                <a (click)="searchZipCode('deliveryPlace')" class="cursorPointer" matSuffix>
+                                    <mat-icon>search</mat-icon>
+                                </a>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Endereço</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.address" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Complemento</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.complement" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Número</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.number" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Bairro</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.district" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Cidade</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.city" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>UF</mat-label>
+                                <input type="text" matInput [(ngModel)]="newOrder.deliveryPlace.state" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <div *ngIf="loading_deliveryPlace_zipCode" class="{{ loadCssStatus(loading_deliveryPlace_zipCode, 'deliveryPlace', 'overlay') }}">
+                        <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                    </div>
+                </fieldset>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions">
+                <span *ngIf="newOrder?.deliveryPlace?.typeUser">
+                    <button mat-raised-button color="primary" class="right" (click)="nextTab(stepper, 'deliveryPlace')">Próximo</button>
+                </span>
+                <button mat-raised-button class="right" matStepperPrevious>Voltar</button>
+            </div>
+        </mat-step>
+        <mat-step>
+            <ng-template matStepLabel>RESUMO</ng-template>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" style="margin-bottom: 5px;">
+                <div class="row contentResume">
+                    <div class="col-xs-12 col-sm-12 col-md-4 col-lg-5 card route">
+                        <h2>Percurso</h2>
+                        <mat-divider></mat-divider>
+                        <div>
+                            <h4>
+                                <img src="assets/img/map/circle-a.png" alt="A">
+                                RETIRADA
+                                <mat-icon class="edit-icon" matTooltip="Editar" matTooltipPosition="left"
+                                    (click)="editAddress(stepper, 'collectionSite')">edit</mat-icon>
+                            </h4>
+                            <div class="routeAddress">
+                                {{ newOrder?.collectionSite?.address }}, {{ newOrder?.collectionSite?.number }},
+                                {{ newOrder?.collectionSite?.district }}, {{ newOrder?.collectionSite?.city }}, 
+                                {{ newOrder?.collectionSite?.state }} - {{ newOrder?.collectionSite?.zipCode }}
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div>
+                            <h4>
+                                <img src="assets/img/map/circle-b.png" alt="B">
+                                Destino
+                                <mat-icon class="edit-icon" matTooltip="Editar" matTooltipPosition="left"
+                                    (click)="editAddress(stepper, 'deliveryPlace')">edit</mat-icon>
+                            </h4>
+                            <div class="routeAddress">
+                                {{ newOrder?.deliveryPlace?.address }}, {{ newOrder?.deliveryPlace?.number }},
+                                {{ newOrder?.deliveryPlace?.district }}, {{ newOrder?.deliveryPlace?.city }}, 
+                                {{ newOrder?.deliveryPlace?.state }} - {{ newOrder?.deliveryPlace?.zipCode }}
+                            </div>
+                        </div>
+                        <mat-divider></mat-divider>
+                        <div class="messageToTheDriver">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Mensagem para o motorista</mat-label>
+                                <textarea matInput [(ngModel)]="newOrder.messageToDriver" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" maxlength="255"></textarea>
+                            </mat-form-field>
+                        </div>
+                        <div class="summaryMap">
+                            <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 centralize">
+                                    <span class="summaryTitle">
+                                        Entregue em<br />
+                                        {{ gmapLegs.duration }}
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 centralize">
+                                    <span class="summaryTitle">
+                                        Distância<br />
+                                        {{ gmapLegs.distance }}
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-4 centralize">
+                                    <span class="summaryTitle">
+                                        Total a pagar<br />
+                                        R$: {{ valueOrder }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-sm-12 col-md-8 col-lg-7 removePadding">
+                        <div *ngIf="showMap">
+                            <app-gmaps [markerA]="markerA" [markerB]="markerB" [markerDraggable]="false" (legs)="getGmapLegs($event)" (source)="getGmapSource($event)" (destination)="getGmapDestination($event)" ></app-gmaps>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions" style="right: -15px;">
+                <button mat-raised-button color="primary" class="right" (click)="openBottomSheet()" [disabled]="!habledPaymentBtn">Pagar</button>
+                <button mat-raised-button class="right" matStepperPrevious>Voltar</button>
+                <button mat-raised-button class="right" (click)="save()">Salvar</button> <!-- Vai deixa de existir quando estiver com o meio de pagamento ativo -->
+                <span *ngIf="component === 'newOrder'">
+                    <button mat-raised-button class="right" color="primary" (click)="reset(stepper)">Redefinir pedido</button>
+                </span>
+            </div>
+        </mat-step>
+    </mat-horizontal-stepper>
+</div>

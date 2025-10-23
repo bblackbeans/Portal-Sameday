@@ -1,0 +1,111 @@
+<div *ngIf="loading$ | async" class="center">
+  <div class="pageLoading">
+      <mat-spinner></mat-spinner>
+  </div>
+  <p>Processando, aguarde...</p>
+</div>
+
+<div *ngIf="!(loading$ | async)">
+
+    <form class="form">
+        <div class="inputGroup2">
+            <input id="radio1" name="paymentType" value="pix" [(ngModel)]="paymentType" type="radio" />
+            <label for="radio1">Pagamento por PIX</label>
+        </div>
+        <div class="inputGroup2">
+            <input id="radio2" name="paymentType" value="credit" [(ngModel)]="paymentType" type="radio" />
+            <label for="radio2">Pagamento por cartão de crédito</label>
+        </div>
+    </form>
+    
+    <div *ngIf="paymentType == 'credit'">
+
+        <div class="credit-card-box mt-30">
+            <div id="card-flip" class="flip">
+                <div class="front">
+                    <div class="chip"></div>
+                    <div class="logo">
+                      <card-brand [cardNumber]="credit.number.toString()" [cardBrand]="credit.brand"></card-brand>
+                    </div>
+                    <div class="number">{{ credit.number | mask: '0000 0000 0000 0000' }}</div>
+                    <div class="card-holder">
+                        <label>Nome</label>
+                        <div class="uppercase">{{ credit.name }}</div>
+                    </div>
+                    <div class="card-expiration-date">
+                        <label>Validade</label>
+                        <div>{{ credit.expireMonth }}/{{ credit.expireYear }}</div>
+                    </div>
+                </div>
+                <div class="back">
+                    <div class="strip"></div>
+                    <div class="logo">
+                      
+                    </div>
+                    <div class="ccv">
+                        <label>CCV</label>
+                        <div>{{ credit.verifiedCode }}</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Nome no cartão</mat-label>
+            <input type="text" name="creditname" matInput [(ngModel)]="credit.name" autocomplete="off" required class="uppercase">
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Número</mat-label>
+            <input type="text" mask="0000 0000 0000 0000" name="creditnumber" matInput (keyup)="changeCreditCard()" [(ngModel)]="credit.number" autocomplete="off" required>
+        </mat-form-field>
+
+        <fieldset>
+            <legend>Vencimento</legend>
+            <div class="row">
+
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label>Mês</mat-label>
+                        <input mask="00" name="creditexpiremouth" type="text" matInput [(ngModel)]="credit.expireMonth" autocomplete="off" required>
+                    </mat-form-field>
+                </div>
+                <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                    <mat-form-field appearance="outline">
+                        <mat-label >Ano</mat-label>
+                        <input mask="0000" name="creditexpireyear" type="text" matInput [(ngModel)]="credit.expireYear" autocomplete="off" required>
+                    </mat-form-field>
+                </div>
+
+            </div>
+        </fieldset>
+
+        <mat-form-field appearance="outline">
+            <mat-label>Código de Segurança</mat-label>
+            <input mask="000" name="verifiedcode" type="text" (focus)="flipCard()" (focusout)="flipCard()" matInput [(ngModel)]="credit.verifiedCode" autocomplete="off" required>
+        </mat-form-field>
+
+        <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions" style="right: -15px;">
+            <button mat-raised-button color="primary" class="right" (click)="paymentCreditCard()" >Efetuar pagamento</button>
+        </div>
+    </div>
+
+    <div *ngIf="paymentType == 'pix'">
+      <h3 class="mt-5">Pagamento Instantâneo - PIX</h3>
+      <div class="row" style="margin: 0 18%;">
+        <img src="./assets/img/pix-icon-1.jpg" width="350px">
+      </div>
+      <div style="width: 500px; margin: 40px auto;">
+        <p>
+          Pagamentos instantâneos são a nova modalidade de transferência do banco central, 
+          que funciona 24 horas por dia e possuem confirmação em tempo real.
+        </p>
+      </div>
+
+      <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 actions" >
+          <button mat-raised-button color="primary" class="right" (click)="paymentPix()" > Efetuar pagamento</button>
+      </div>
+
+    </div>
+
+</div>

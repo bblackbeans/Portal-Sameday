@@ -1,0 +1,73 @@
+<div *ngIf="pageLoading" class="center">
+  <div class="pageLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <p>Carregando relatório geral...</p>
+</div>
+
+<div [hidden]="pageLoading" class="main-content">
+  <div class="container-fluid">
+
+    <div class="charjs-box card-title">
+      <i class="fa fa-angle-double-left pr-5 click" (click)="beforeMonth()"></i> {{ strDate }} <i class="fa fa-angle-double-right pl-5 click" (click)="afterMonth()"></i>
+    </div>
+
+    <div class="card card-stats standard-table">
+      <div class="actionMenu">
+        <button (click)="reload()" mat-fab color="white">
+          <mat-icon matTooltip="Atualizar" matTooltipPosition="above">refresh</mat-icon>
+        </button>
+      </div>
+      <div class="standard-input-filter">
+        <mat-form-field>
+          <input matInput placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(search.value)" #search>
+          <button mat-button *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear"
+            (click)="applyFilter(search.value='')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="mat-elevation-z8">
+        <mat-progress-bar *ngIf="listLoading" mode="query"></mat-progress-bar>
+        <mat-table [hidden]="listLoading" #sort="matSort" [dataSource]="dataSource" cellspacing="0" width="100%" matSort>
+          <!-- Status -->
+          <ng-container matColumnDef="status">
+            <mat-header-cell style="width: 25%;" *matHeaderCellDef mat-sort-header> Status </mat-header-cell>
+            <mat-cell style="width: 25%;" *matCellDef="let row">
+              <span class="status {{ loadCssStatus(row?.status) }}"></span>
+            </mat-cell>
+          </ng-container>
+          <!-- Delivery Time -->
+          <ng-container matColumnDef="duration">
+            <mat-header-cell style="width: 25%;" *matHeaderCellDef mat-sort-header> Tempo de Entrega </mat-header-cell>
+            <mat-cell style="width: 25%;" *matCellDef="let row">{{ row.duration }}</mat-cell>
+          </ng-container>
+          <!-- KM -->
+          <ng-container matColumnDef="km">
+            <mat-header-cell style="width: 25%;" *matHeaderCellDef mat-sort-header> KM </mat-header-cell>
+            <mat-cell style="width: 25%;" *matCellDef="let row">{{ row.km }}</mat-cell>
+          </ng-container>
+          <!-- Price -->
+          <ng-container matColumnDef="price">
+            <mat-header-cell style="width: 25%;" *matHeaderCellDef mat-sort-header> Preço </mat-header-cell>
+            <mat-cell style="width: 25%;" *matCellDef="let row">{{ row.price | convertCentToCoin }}</mat-cell>
+          </ng-container>
+          <!-- Date -->
+          <ng-container matColumnDef="created_at">
+            <mat-header-cell  *matHeaderCellDef mat-sort-header> Data do Pedido</mat-header-cell>
+            <mat-cell *matCellDef="let row">{{ row.created_at | date:'dd/MM/yyyy HH:mm' }}</mat-cell>
+          </ng-container>
+          
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell center" [attr.colspan]="displayedColumns.length">
+              Resultado não encontrado!
+            </td>
+          </tr>
+        </mat-table>
+        <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
+      </div>
+    </div>
+  </div>
+</div>

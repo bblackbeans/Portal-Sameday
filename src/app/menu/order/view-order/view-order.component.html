@@ -1,0 +1,185 @@
+<div *ngIf="pageLoading" class="center">
+    <div class="pageLoading">
+        <mat-spinner></mat-spinner>
+    </div>
+    <p>Carregando...</p>
+</div>
+
+<div [hidden]="pageLoading" class="card view-order">
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+        <fieldset class="withdrawal">
+            <legend>Retirada</legend>
+            <mat-list>
+                <mat-list-item>
+                    <span *ngIf="viewOrder?.collectionSite?.typeUser === 'client'">
+                        <h4>Nome Completo:</h4>
+                    </span>
+                    <span *ngIf="viewOrder?.collectionSite?.typeUser === 'business'">
+                        <h4>Razão Social:</h4>
+                    </span>
+                    <h5>{{viewOrder?.collectionSite?.name}}</h5>
+                </mat-list-item>
+                <span *ngIf="viewOrder?.collectionSite?.typeUser === 'business'">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Nome Fantasia:</h4>
+                        <h5>{{viewOrder?.collectionSite?.fantasyName}}</h5>
+                    </mat-list-item>
+                </span>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <span *ngIf="viewOrder?.collectionSite?.typeUser === 'client'">
+                        <h4>CPF:</h4>
+                    </span>
+                    <span *ngIf="viewOrder?.collectionSite?.typeUser === 'business'">
+                        <h4>CNPJ:</h4>
+                    </span>
+                    <h5>{{viewOrder?.collectionSite?.cpfcnpj | cnpj_cpf}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>Telefone:</h4>
+                    <h5>{{viewOrder?.collectionSite?.phone | phone}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>E-mail:</h4>
+                    <h5>{{viewOrder?.collectionSite?.email}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>Endereço:</h4>
+                    <h5>
+                        {{viewOrder?.collectionSite?.address}}, {{viewOrder?.collectionSite?.number}},
+                        {{viewOrder?.collectionSite?.complement}}, {{viewOrder?.collectionSite?.district}},
+                        {{viewOrder?.collectionSite?.city}}, {{viewOrder?.collectionSite?.state}} -
+                        {{viewOrder?.collectionSite?.zipCode}}
+                    </h5>
+                </mat-list-item>
+            </mat-list>
+        </fieldset>
+        <fieldset class="destiny">
+            <legend>Destino</legend>
+            <mat-list>
+                <mat-list-item>
+                    <span *ngIf="viewOrder?.deliveryPlace?.typeUser === 'client'">
+                        <h4>Nome Completo:</h4>
+                    </span>
+                    <span *ngIf="viewOrder?.deliveryPlace?.typeUser === 'business'">
+                        <h4>Razão Social:</h4>
+                    </span>
+                    <h5>{{viewOrder?.deliveryPlace?.name}}</h5>
+                </mat-list-item>
+                <span *ngIf="viewOrder?.deliveryPlace?.typeUser === 'business'">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Nome Fantasia:</h4>
+                        <h5>{{viewOrder?.deliveryPlace?.fantasyName}}</h5>
+                    </mat-list-item>
+                </span>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <span *ngIf="viewOrder?.deliveryPlace?.typeUser === 'client'">
+                        <h4>CPF:</h4>
+                    </span>
+                    <span *ngIf="viewOrder?.deliveryPlace?.typeUser === 'business'">
+                        <h4>CNPJ:</h4>
+                    </span>
+                    <h5>{{viewOrder?.deliveryPlace?.cpfcnpj | cnpj_cpf}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>Telefone:</h4>
+                    <h5>{{viewOrder?.deliveryPlace?.phone | phone}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>E-mail:</h4>
+                    <h5>{{viewOrder?.deliveryPlace?.email}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>Endereço:</h4>
+                    <h5>
+                        {{viewOrder?.deliveryPlace?.address}}, {{viewOrder?.deliveryPlace?.number}},
+                        {{viewOrder?.deliveryPlace?.complement}}, {{viewOrder?.deliveryPlace?.district}},
+                        {{viewOrder?.deliveryPlace?.city}}, {{viewOrder?.deliveryPlace?.state}} -
+                        {{viewOrder?.deliveryPlace?.zipCode}}
+                    </h5>
+                </mat-list-item>
+            </mat-list>
+        </fieldset>
+        <fieldset *ngFor="let item of viewOrder?.items; let i = index">
+            <legend>{{ i + 1 }}º Objeto</legend>
+            <mat-list>
+                <mat-list-item>
+                    <h4>Nome:</h4>
+                    <h5>{{item?.name}}</h5>
+                </mat-list-item>
+                <span [hidden]="!item?.model">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Modelo:</h4>
+                        <h5>{{item?.model}}</h5>
+                    </mat-list-item>
+                </span>
+                <span [hidden]="!item?.width">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Largura:</h4>
+                        <h5>{{item?.width}} {{item?.conversion_width === 'metros' ? '[m]' : '[cm]' }}</h5>
+                    </mat-list-item>
+                </span>
+                <span [hidden]="!item?.height">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Altura:</h4>
+                        <h5>{{item?.height}} {{item?.conversion_height === 'metros' ? '[m]' : '[cm]' }}</h5>
+                    </mat-list-item>
+                </span>
+                <span [hidden]="!item?.length">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Comprimento:</h4>
+                        <h5>{{item?.length}} {{item?.conversion_length === 'metros' ? '[m]' : '[cm]' }}</h5>
+                    </mat-list-item>
+                </span>
+                <span [hidden]="!item?.weight">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Peso:</h4>
+                        <h5>{{item?.weight}} {{item?.conversion_weight === 'gramas' ? '[g]' : '[kg]' }}</h5>
+                    </mat-list-item>
+                </span>
+                <span [hidden]="!item?.quantity">
+                    <mat-divider></mat-divider>
+                    <mat-list-item>
+                        <h4>Quatidade:</h4>
+                        <h5>{{item?.quantity}}</h5>
+                    </mat-list-item>
+                </span>
+            </mat-list>
+        </fieldset>
+        <fieldset>
+            <legend>Resumo</legend>
+            <mat-list>
+                <mat-list-item>
+                    <h4>Preço:</h4>
+                    <h5>{{viewOrder?.summarize?.price | convertCentToCoin}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>KM:</h4>
+                    <h5>{{viewOrder?.summarize?.km}}</h5>
+                </mat-list-item>
+                <mat-divider></mat-divider>
+                <mat-list-item>
+                    <h4>Estimativa de entrega:</h4>
+                    <h5>{{viewOrder?.summarize?.duration}}</h5>
+                </mat-list-item>
+            </mat-list>
+            <app-gmaps [markerA]="markerA" [markerB]="markerB" [markerDraggable]="false"></app-gmaps>
+        </fieldset>
+        <button [routerLink]="['/order/list']" mat-raised-button color="primary" class="right">Voltar</button>
+    </div>
+</div>

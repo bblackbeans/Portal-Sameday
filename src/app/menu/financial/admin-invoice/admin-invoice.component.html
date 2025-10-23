@@ -1,0 +1,130 @@
+<div *ngIf="pageLoading" class="center">
+  <div class="pageLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <p>Carregando pagamentos...</p>
+</div>
+
+<div [hidden]="pageLoading" class="main-content">
+  <div class="container-fluid">
+
+    <div class="charjs-box card-title">
+      <i class="fa fa-angle-double-left pr-5 click" (click)="beforeMonth()"></i>{{ strDate }} <i class="fa fa-angle-double-right pl-5 click" (click)="afterMonth()"></i>
+    </div>
+
+    <div class="card card-stats standard-table">
+      <div class="actionMenu">
+        <button (click)="reload()" mat-fab color="white">
+          <mat-icon matTooltip="Atualizar" matTooltipPosition="above">refresh</mat-icon>
+        </button>
+      </div>
+      <div class="standard-input-filter">
+        <mat-form-field>
+          <input matInput placeholder="Procurar" autocomplete="off" (keyup)="applyFilter(search.value)" #search>
+          <button mat-button *ngIf="search.value" matSuffix mat-icon-button aria-label="Clear" (click)="applyFilter(search.value='')">
+            <mat-icon>close</mat-icon>
+          </button>
+        </mat-form-field>
+      </div>
+      <div class="mat-elevation-z8">
+        <mat-progress-bar *ngIf="listLoading" mode="query"></mat-progress-bar>
+        <mat-table [hidden]="listLoading" #sort="matSort" [dataSource]="dataSource" cellspacing="0" width="100%" matSort>
+          <!-- driverName -->
+          <ng-container matColumnDef="driverName">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Motorista
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.driverName }}
+            </mat-cell>
+          </ng-container>
+          <!-- driverDocument -->
+          <ng-container matColumnDef="driverDocument">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              CPF/CNPJ
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.driverDocument | cnpj_cpf }}
+            </mat-cell>
+          </ng-container>
+          <!-- driverMail -->
+          <ng-container matColumnDef="driverMail">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              E-mail
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.driverMail }}
+            </mat-cell>
+          </ng-container>
+          <!-- driverPhone -->
+          <ng-container matColumnDef="driverPhone">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Telefone
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.driverPhone | phone }}
+            </mat-cell>
+          </ng-container>
+          <!-- qtdOrders -->
+          <ng-container matColumnDef="qtdOrders">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Entrega(s)
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.qtdOrders }}
+            </mat-cell>
+          </ng-container>
+          <!-- totalKms -->
+          <ng-container matColumnDef="totalKms">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Quilômetros rodados
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.totalKms | converToKilometers }}
+            </mat-cell>
+          </ng-container>
+          <!-- totalHours -->
+          <ng-container matColumnDef="totalHours">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Tempo de conclusão
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.totalTimeDelivery | converToHours }}
+            </mat-cell>
+          </ng-container>
+          <!-- totalKms -->
+          <ng-container matColumnDef="totalValue">
+            <mat-header-cell style="width: 20%;" *matHeaderCellDef mat-sort-header>
+              Valor total
+            </mat-header-cell>
+            <mat-cell style="width: 20%;" class="center" *matCellDef="let row">
+              {{ row.totalValue | convertCentToCoin }}
+            </mat-cell>
+          </ng-container>
+          <!-- Actions -->
+          <ng-container matColumnDef="actions">
+            <mat-header-cell *matHeaderCellDef mat-sort-header class="position-actions">
+              Ações
+            </mat-header-cell>
+            <mat-cell *matCellDef="let row" style="text-align: center;">
+              <mat-icon matTooltip="Visualizar motorista" matTooltipPosition="left" (click)="openDialog(row)">
+                remove_red_eye
+              </mat-icon>
+            </mat-cell>
+          </ng-container>
+          <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+          <mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell center" [attr.colspan]="displayedColumns.length">
+              Resultado(s) não encontrado(s)!
+            </td>
+          </tr>
+        </mat-table>
+        <mat-paginator #paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons>
+        </mat-paginator>
+
+      </div>
+    </div>
+
+  </div>
+</div>

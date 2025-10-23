@@ -1,0 +1,28 @@
+<div>
+
+  <ng-container *ngIf="order.orderInvoice && order.orderInvoice.method == 'pix' ">
+    <h3 class="bold">Pagamento Instantâneo - PIX</h3>
+    <div class="row">
+      <img class="qrcode-image" [src]="order.orderInvoice.pixQRCode" width="200px" >
+    </div>
+    <div class="centralize" style="font-weight: 600;">
+      Aponte seu celular para o código QR Code
+    </div>
+    <div>
+      <div ngxClipboard [cbContent]="order.orderInvoice.pixQRCodeText" (click)="messageCopy()" class="clipboard-btn active mt-30">
+        Pix copia e cola
+      </div>
+    </div>
+    <div class="box-message">
+      <h4>O que é o pagamento instantâneo?</h4>
+      <p>
+        Pagamentos instantâneos são a nova modalidade de transferência do banco central, 
+        que funciona 24 horas por dia e possuem confirmação em tempo real.
+      </p>
+      <p>
+        Procure em seu aplicativo de banco ou conta digital a funcionalidade
+        e utilize o código acima para efetuar o pagamento
+      </p>
+    </div>
+  </ng-container>
+</div>

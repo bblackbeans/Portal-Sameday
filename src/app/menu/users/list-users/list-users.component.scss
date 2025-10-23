@@ -1,0 +1,41 @@
+@import '../../../../assets/scss/core/variables/colors';
+
+.statusBusiness,
+.statusAtivo {
+    background-image: linear-gradient(to right, $green-400, $green-700);
+    transition: all 0.3s ease-in-out;
+}
+
+.statusUser {
+    background-image: linear-gradient(to right, $cyan-500, $cyan-800);
+    transition: all 0.3s ease-in-out;
+}
+
+.statusDriver {
+    background-image: linear-gradient(to right, $amber-600, $amber-900);
+    transition: all 0.3s ease-in-out;
+}
+
+.statusInativo {
+    background-image: linear-gradient(to right, $red-500, $red-800);
+    transition: all 0.3s ease-in-out;
+}
+
+.statusAll {
+    background-image: linear-gradient(to right, $grey-500, $grey-700);
+    transition: all 0.3s ease-in-out;
+}
+
+.statusCard div {
+    padding-top: 5px !important;
+}
+
+.statusBusiness:hover,
+.statusAtivo:hover,
+.statusUser:hover,
+.statusDriver:hover,
+.statusInativo:hover,
+.statusAll:hover {
+    transform: translateY(-2px);
+    box-shadow: 2px 4px 10px rgb(0 0 0 / 35%)
+}

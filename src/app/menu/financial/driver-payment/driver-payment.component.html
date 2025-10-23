@@ -1,0 +1,36 @@
+<div *ngIf="pageLoading" class="center">
+  <div class="pageLoading">
+    <mat-spinner></mat-spinner>
+  </div>
+  <p>Carregando relatório geral...</p>
+</div>
+
+<div [hidden]="pageLoading" class="main-content">
+  <div class="container-fluid">
+
+    <div class="charjs-box card-title">
+      <i class="fa fa-angle-double-left pr-5 click" (click)="beforeMonth()"></i> {{ strDate }} <i class="fa fa-angle-double-right pl-5 click" (click)="afterMonth()"></i>
+    </div>
+
+
+
+    <div class="row">
+      <div class="col-md-8 col-xl-8">
+        <div class="card mb-3 widget-content bg-strong-bliss">
+          <div class="widget-content-wrapper text-white">
+            <div class="widget-content-left">
+              <div class="widget-heading">Total do mês </div>
+              <div class="widget-subheading"> &nbsp; </div>
+            </div>
+            <div class="widget-content-right">
+              <div class="widget-numbers text-white"><span> {{ dataSource | convertCentToCoin }} </span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    
+
+  </div>
+</div>

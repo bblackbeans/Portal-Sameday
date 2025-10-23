@@ -1,0 +1,116 @@
+<div *ngIf="pageLoading" class="center">
+    <div class="pageLoading">
+        <mat-spinner></mat-spinner>
+    </div>
+    <p>Carregando dashboard...</p>
+</div>
+<div [hidden]="pageLoading" class="main-content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-warning card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">local_shipping</i>
+                        </div>
+                        <h3 class="card-title">+{{totals.driver}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            Motoristas cadastrados
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-info card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">supervisor_account</i>
+                        </div>
+                        <h3 class="card-title">+{{totals.client}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            Clientes cadastrados
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-danger card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">speed</i>
+                        </div>
+                        <h3 class="card-title">+{{totals.kms ? totals.kms : '0'}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            KM's rodados
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <div class="card card-stats">
+                    <div class="card-header card-header-success card-header-icon">
+                        <div class="card-icon">
+                            <i class="material-icons">monetization_on</i>
+                        </div>
+                        <h3 class="card-title">+R$:{{totals.goodsDelivered ? totals.goodsDelivered : '0,00'}}</h3>
+                    </div>
+                    <div class="card-footer">
+                        <div class="stats">
+                            Em mercadoria entregue
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div [hidden]="graphicsLoading"
+            class="row contentButton col-xs-12 col-sm-12 col-md-10 offset-md-1 col-lg-6 offset-lg-3">
+            <div class="center col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <button mat-raised-button color="primary" (click)="selectWeekMonthYear('days')">Últimos 7
+                    Dias</button>
+            </div>
+            <div class="center col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <button mat-raised-button color="primary" (click)="selectWeekMonthYear('months')">Últimos 7
+                    Meses</button>
+            </div>
+            <div class="center col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                <button mat-raised-button color="primary" (click)="selectWeekMonthYear('years')">Últimos 7
+                    Anos</button>
+            </div>
+        </div>
+        <div class="row" [hidden]="graphicsLoading">
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <canvas baseChart [datasets]="barChartDataDriver" [labels]="barChartLabels" [options]="barChartOptions"
+                    [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+                </canvas>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <canvas baseChart [datasets]="barChartDataClient" [labels]="barChartLabels" [options]="barChartOptions"
+                    [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+                </canvas>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <canvas baseChart [datasets]="barChartDataKms" [labels]="barChartLabels" [options]="barChartOptions"
+                    [plugins]="barChartPlugins" [legend]="barChartLegend" [chartType]="barChartType">
+                </canvas>
+            </div>
+            <div class="col-lg-3 col-md-6 col-sm-6">
+                <canvas baseChart [datasets]="barChartDataGoodsDelivered" [labels]="barChartLabels"
+                    [options]="barChartOptions" [plugins]="barChartPlugins" [legend]="barChartLegend"
+                    [chartType]="barChartType">
+                </canvas>
+            </div>
+        </div>
+        <div *ngIf="graphicsLoading" class="center">
+            <div class="graphicsLoading">
+                <mat-spinner></mat-spinner>
+            </div>
+            <p>Carregando gráficos...</p>
+        </div>
+    </div>
+</div>
