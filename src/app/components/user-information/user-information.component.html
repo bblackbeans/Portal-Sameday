@@ -1,0 +1,67 @@
+<h3 mat-dialog-title>Histórico</h3>
+<div mat-dialog-content>
+    <div class="standard-table">
+        <form autocomplete="off">
+            <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 removePadding">
+                <mat-card-header>
+                    <mat-card-title>
+                        <div class="headerTitle"> Clientes ({{ dataSource?.data?.length }}) </div>
+                    </mat-card-title>
+                </mat-card-header>
+                <div class="standard-input-filter">
+                    <mat-form-field>
+                        <input matInput (keyup)="applyFilter(buscar.value)" autocomplete="nope" placeholder="Procurar"
+                            #buscar>
+                        <button mat-button *ngIf="buscar.value" matSuffix mat-icon-button aria-label="Clear"
+                            (click)="applyFilter(buscar.value='')">
+                            <mat-icon>close</mat-icon>
+                        </button>
+                    </mat-form-field>
+                </div>
+                <div class="mat-elevation-z8">
+                    <mat-table #sort="matSort" [dataSource]="dataSource" cellspacing="0" width="100%" matSort>
+                        <!-- Nome / Razão Social -->
+                        <ng-container matColumnDef="name">
+                            <mat-header-cell style="width:34%" mat-header-cell *matHeaderCellDef mat-sort-header>Nome / Razão Social</mat-header-cell>
+                            <mat-cell style="width:34%" mat-cell *matCellDef="let row">
+                                <span class="cursorPointer" matTooltip="{{ row?.name }}" matTooltipPosition="right">
+                                    {{row.name | shortenName}}
+                                </span>
+                            </mat-cell>
+                        </ng-container>
+                        <!-- CPF / CNPJ -->
+                        <ng-container matColumnDef="cpfcnpj">
+                            <mat-header-cell style="width:33%" mat-header-cell *matHeaderCellDef mat-sort-header>CPF / CNPJ</mat-header-cell>
+                            <mat-cell style="width:33%" mat-cell *matCellDef="let row"> {{ row?.cpfcnpj | cnpj_cpf }}</mat-cell>
+                        </ng-container>
+                        <!-- Telefone -->
+                        <ng-container matColumnDef="phone">
+                            <mat-header-cell style="width:33%" mat-header-cell *matHeaderCellDef mat-sort-header>Telefone</mat-header-cell>
+                            <mat-cell style="width:33%" mat-cell *matCellDef="let row">{{ row?.phone | phone }}</mat-cell>
+                        </ng-container>
+                        <!-- Action -->
+                        <ng-container matColumnDef="action">
+                            <mat-header-cell mat-header-cell *matHeaderCellDef mat-sort-header>Ação</mat-header-cell>
+                            <mat-cell style="padding-left: 20px !important" mat-cell *matCellDef="let row">
+                                <mat-radio-button color="primary" (click)='close(row)'></mat-radio-button>
+                            </mat-cell>
+                        </ng-container>
+                        <mat-header-row mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                        <mat-row mat-row *matRowDef="let row; columns: displayedColumns;"></mat-row>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell center" [attr.colspan]="displayedColumns.length">
+                                Resultado não encontrado!
+                            </td>
+                        </tr>
+                    </mat-table>
+                    <div [style.display]="dataSource?.data?.length > 3 ? 'block' : 'none'">
+                        <mat-paginator #paginator [pageSizeOptions]="[50, 100, 500, 1000]" [showFirstLastButtons]="true"></mat-paginator>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div mat-dialog-actions class="right">
+    <button mat-button (click)="close()">Cancelar</button>
+</div>
