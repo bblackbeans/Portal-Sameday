@@ -1,0 +1,99 @@
+@media only screen and (min-width: 991px) {
+    .enableExit {
+        display: none !important;
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .enableExit {
+        display: block !important;
+    }
+}
+
+.content-profile ::ng-deep {
+    top: 20px;
+    width: 260px;
+    position: relative;
+
+    .content-profile-picture {
+        width: 130px;
+    }
+
+    .content-profile-info {
+        top: 29px;
+        width: 130px;
+        float: right;
+        position: absolute;
+        left: 106px !important;
+
+        h5,
+        h4 {
+            margin-top: 5px !important;
+            margin-bottom: 5px !important;
+        }
+
+        h5 {
+            color: white !important;
+            font-weight: 700 !important;
+        }
+
+        h4 {
+            color: white !important;
+            font-size: 12px;
+        }
+    }
+}
+
+.logo {
+    height: 150px !important;
+    padding: 15px 0 0 !important;
+    position: relative !important;
+    background-color: #3d4c5a !important;
+}
+
+.logo-img img {
+    top: 7px !important;
+    left: 64px !important;
+    width: 140px !important;
+    position: absolute !important;
+}
+
+ul.sbmn-collapse {
+  list-style: none;
+
+  overflow: hidden;
+  max-height: 500px;
+  transition: max-height 0.35s ease-out;
+
+  &.hidden {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.15s ease-out;
+  }
+
+  a.nav-link p {
+    font-size: 12px;
+  }
+
+  a.nav-link {
+    margin-top: 0;
+    padding: 5px 10px;
+  }
+
+  li.active > a {
+    background-color: #3d4c5a;
+    box-shadow: 0 4px 20px 0px rgb(0 0 0 / 14%), 0 7px 10px -5px rgb(156 39 176 / 40%);
+  }
+
+}
+
+.sbmn-nav-link {
+  display: flex;
+  cursor: pointer;
+
+  i.fa {
+    font-size: 13px;
+    position: absolute;
+    right: 10px;
+  }
+}

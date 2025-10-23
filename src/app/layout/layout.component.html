@@ -1,0 +1,22 @@
+<div class="wrapper">
+    <div class="sidebar" data-color="purple" data-background-color="white" data-image="./assets/img/sidebar-1.jpg">
+        <app-sidebar></app-sidebar>
+        <div class="sidebar-background" style="background-image: url(./assets/img/sidebar-4.jpg)"></div>
+    </div>
+    <div class="main-panel">
+        <app-navbar></app-navbar>
+
+        <div *ngIf="unavailable" class="text-center unavailable">
+            <mat-icon>security</mat-icon>
+            <span [innerHTML]="unavailableMessage"></span>
+        </div>
+
+        <router-outlet *ngIf="!unavailable"></router-outlet>
+
+        <app-footer></app-footer>
+        <ngx-scrolltop mode="classic"></ngx-scrolltop>
+        <app-sameday-progress-spinner color="primary" mode="indeterminate" [value]="90" [backdropEnabled]="true"
+            [positionGloballyCenter]="true">
+        </app-sameday-progress-spinner>
+    </div>
+</div>

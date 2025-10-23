@@ -1,0 +1,49 @@
+<div class="logo">
+  <a class="simple-text">
+    <div class="logo-img">
+      <img src="/assets/img/logo.png" />
+    </div>
+  </a>
+  <div class="content-profile">
+    <div class="content-profile-picture">
+      <app-same-day-attach-file [files]="file" limit="2" allowed="jpeg|jpg|png|jfif" [canAdd]="true" [canDelete]="true"
+        [category]="'profilePicture'" (toSave)="loadFile($event)">
+      </app-same-day-attach-file>
+    </div>
+    <div class="content-profile-info">
+      <h4>{{ shift }}</h4>
+      <h5>{{ user?.name | shortenName }}</h5>
+    </div>
+  </div>
+</div>
+<div class="sidebar-wrapper">
+  <ul class="nav">
+    <li routerLinkActive="active" *ngFor="let menuItem of menuItems" class="{{menuItem.class}} nav-item">
+      <a *ngIf="!menuItem.children" class="nav-link" [routerLink]="[menuItem.path]">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+      </a>
+      <a *ngIf="menuItem.children" class="nav-link sbmn-nav-link" (click)="toggleMenu(menuItem.code)" style="display: flex;">
+        <i class="material-icons">{{menuItem.icon}}</i>
+        <p>{{menuItem.title}}</p>
+        <i id="sbmn-icon-{{menuItem.code}}" class="fa fa-chevron-down" style="font-size: 13px;"></i>
+      </a>
+
+      <ul id="sbmn-{{menuItem.code}}" *ngIf="menuItem.children" class="sbmn-collapse hidden">
+        <li routerLinkActive="active" *ngFor="let sbmnItem of menuItem.children">
+          <a class="nav-link" [routerLink]="[sbmnItem.path]">
+            <i class="material-icons">{{sbmnItem.icon}}</i>
+            <p>{{sbmnItem.title}}</p>
+          </a>
+        </li>
+      </ul>
+
+    </li>
+    <li routerLinkActive="active" class="nav-item enableExit cursorPointer">
+      <a class="nav-link" (click)="exit()">
+        <i class="material-icons">logout</i>
+        <p>Sair</p>
+      </a>
+    </li>
+  </ul>
+</div>
