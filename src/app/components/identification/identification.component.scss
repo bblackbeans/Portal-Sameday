@@ -1,0 +1,86 @@
+.buttonLogin {
+    width: 100px;
+    float: right;
+}
+
+.row.attachment,
+.row.contentApproval {
+    margin-left: 0px !important;
+}
+
+legend {
+    font-size: 0.9rem;
+}
+
+.contentIcon span {
+    text-align: center;
+}
+
+.contentIcon mat-icon {
+    right: 5px;
+    position: relative;
+    top: -3px !important;
+    vertical-align: middle !important;
+}
+
+.check_circle {
+    color: #66bb6a !important;
+}
+
+.cancel {
+    color: #ef5350 !important;
+}
+
+.help {
+    color: #ff9800 !important;
+}
+
+.error {
+    color: #00bcd4 !important;
+}
+
+fieldset.statusPending {
+    border-color: #ff9800 !important;
+}
+
+fieldset.statusApproved {
+    border-color: #66bb6a !important;
+}
+
+fieldset.statusReproved {
+    border-color: #ef5350 !important;
+}
+
+fieldset.statusRevision {
+    border-color: #00bcd4 !important;
+}
+
+.mat-checkbox ::ng-deep {
+    .mat-checkbox-inner-container-no-side-margin {
+        top: 2px !important;
+    }
+}
+
+.contentActivatedUser ::ng-deep {
+    padding-top: 17px;
+
+    .activatedUser {
+        .mat-slide-toggle-bar {
+            background-color: #66bb6a;
+        }
+
+        .mat-slide-toggle-thumb {
+            background-color: #ddd;
+        }
+    }
+
+    .disabledUser {
+        .mat-slide-toggle-bar {
+            background-color: #ef5350;
+        }
+
+        .mat-slide-toggle-thumb {
+            background-color: #ddd;
+        }
+    }
+}

@@ -1,0 +1,640 @@
+<div class="identification-container">
+    <div *ngIf="pageLoading" class="center">
+        <div class="pageLoading">
+            <mat-spinner></mat-spinner>
+        </div>
+        <p>Carregando...</p>
+    </div>
+
+    <div [hidden]="pageLoading" class="card container-fluid">
+        <h2 class="centralize">
+            <span *ngIf="component === 'userDriverValidate'">
+                Motorista
+            </span>
+            <span *ngIf="component !== 'userDriverValidate'">
+                {{ action === 'insert' ? 'Cadastre-se Agora!' : 'Editar Perfil' }}
+            </span>
+        </h2>
+
+        <div *ngIf="action === 'insert'" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <fieldset>
+                <legend>Tipo de usuário</legend>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <button (click)="typeUser('client')" class="btn btn-custom">Pessoa Fisíca</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <button (click)="typeUser('business')" class="btn btn-custom">Pessoa Jurídica</button>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <button (click)="typeUser('driver')" class="btn btn-custom">Motorista</button>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
+        <div *ngIf="selectedTypeOfUser" class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <fieldset>
+                <legend>Dados</legend>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label *ngIf="typeOfUser !== 'business'">CPF</mat-label>
+                            <mat-label *ngIf="typeOfUser === 'business'">CNPJ</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.data.cpfcnpj" [mask]="mask_cpf_cnpj"
+                                [disabled]="action === 'update' && (profileUser !== 'administrator' && component !== 'userEdit') || component === 'userDriverValidate'"
+                                autocomplete="off" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label *ngIf="typeOfUser !== 'business'">Nome Completo</mat-label>
+                            <mat-label *ngIf="typeOfUser === 'business'">Razão Social</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.data.name" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="typeOfUser === 'business'" class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Nome Fantasia</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.data.fantasyName" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div *ngIf="component === 'userEdit'" class="col-xs-12 col-sm-6 col-md-4 col-lg-4 contentActivatedUser">
+                        <div class="{{ loadCssActivatedUser(info.activatedUser) }}">
+                            <mat-slide-toggle [(ngModel)]="info.activatedUser" color="primary">
+                                {{ info.activatedUser ? 'Ativado' : 'Desativado' }}
+                            </mat-slide-toggle>
+                        </div>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="{{ loadCssStatus(loading_zipCode, 'loading_zipCode', 'content') }}">
+                <legend>Endereço</legend>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>CEP</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.zipCode" mask="00000-000"
+                                autocomplete="off" [disabled]="component === 'userDriverValidate'" required>
+                            <a *ngIf="component !== 'userDriverValidate'" (click)="searchZipCode()" style="cursor: pointer;" matSuffix>
+                                <mat-icon>search</mat-icon>
+                            </a>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Endereço</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.address" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Complemento</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.complement" autocomplete="off"
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Número</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.number" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Bairro</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.district" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Cidade</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.city" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>UF</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.address.state" autocomplete="off"
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <div *ngIf="loading_zipCode" class="{{ loadCssStatus(loading_zipCode, 'loading_zipCode', 'overlay') }}">
+                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                </div>
+            </fieldset>
+
+            <div *ngIf="typeOfUser === 'driver'">
+                <fieldset>
+                    <legend>Veículo</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Marca</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.brand" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Modelo</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.model" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Ano</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.year" mask="0000"
+                                    [disabled]="component === 'userDriverValidate'" autocomplete="off" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Cor</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.color" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Placa</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.plate" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Renavam</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.renavam" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                            <mat-form-field appearance="outline">
+                                <mat-label>Categoria</mat-label>
+                                <input type="text" matInput [(ngModel)]="info.vehicle.category" autocomplete="off"
+                                    [disabled]="component === 'userDriverValidate'" required>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    <fieldset>
+                        <legend>Capacidade de carga</legend>
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Largura</mat-label>
+                                    <input type="number" matInput [(ngModel)]="info.vehicle.width" [disabled]="component === 'userDriverValidate'" autocomplete="off" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Largura - Conversão</mat-label>
+                                    <mat-select [(ngModel)]="info.vehicle.conversion_width" [disabled]="component === 'userDriverValidate'" required>
+                                        <mat-option value="metros">Metros [m]</mat-option>
+                                        <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Altura</mat-label>
+                                    <input type="number" matInput [(ngModel)]="info.vehicle.height" [disabled]="component === 'userDriverValidate'" autocomplete="off" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Altura - Conversão</mat-label>
+                                    <mat-select [(ngModel)]="info.vehicle.conversion_height" [disabled]="component === 'userDriverValidate'" required>
+                                        <mat-option value="metros">Metros [m]</mat-option>
+                                        <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Comprimento</mat-label>
+                                    <input type="number" matInput [(ngModel)]="info.vehicle.length" [disabled]="component === 'userDriverValidate'" autocomplete="off" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Comprimento - Conversão</mat-label>
+                                    <mat-select [(ngModel)]="info.vehicle.conversion_length" [disabled]="component === 'userDriverValidate'" required>
+                                        <mat-option value="metros">Metros [m]</mat-option>
+                                        <mat-option value="centimetros">Centímetros [cm]</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Peso</mat-label>
+                                    <input type="number" matInput [(ngModel)]="info.vehicle.weight" autocomplete="off" min="1" max="70" maxlength="2" [disabled]="component === 'userDriverValidate'" required>
+                                </mat-form-field>
+                            </div>
+                            <div class="col-xs-12 col-sm-4 col-md-2 col-lg-2">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Peso - Conversão</mat-label>
+                                    <mat-select [(ngModel)]="info.vehicle.conversion_weight" [disabled]="component === 'userDriverValidate'" required>
+                                        <mat-option value="gramas">Gramas [g]</mat-option>
+                                        <mat-option value="quilogramas">Quilogramas [kg]</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </fieldset>
+                </fieldset>
+
+                <fieldset>
+                    <legend>Comprovantes</legend>
+                    <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 attachment">
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_cnhPhoto, 'cnhPhoto', 'content') }} {{ loadCssStatus(cnhPhoto?.status) }}">
+                                <legend matTooltip="Anexos - (Máx. 2 arquivos no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto da CNH</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="cnhPhoto.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="cnhPhoto.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="cnhPhoto.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="cnhPhoto.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.cnhPhoto" limit="2" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="cnhPhoto.canAdd" [canDelete]="cnhPhoto.canDelete" [category]="'cnhPhoto'"
+                                        (toSave)="saveAttachment($event, 'cnhPhoto')">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="cnhPhoto.status === 'reproved' || cnhPhoto.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="cnhPhoto.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="cnhPhoto.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('cnhPhoto', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('cnhPhoto', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="cnhPhoto.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('cnhPhoto', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_cnhPhoto" class="{{ loadCssStatus(loading_cnhPhoto, 'cnhPhoto', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_vehiclePhoto, 'vehiclePhoto', 'content') }} {{ loadCssStatus(vehiclePhoto?.status) }}">
+                                <legend matTooltip="Anexos - (Máx. 5 arquivos no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto do veículo</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="vehiclePhoto.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="vehiclePhoto.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="vehiclePhoto.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="vehiclePhoto.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.vehiclePhoto" limit="5" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="vehiclePhoto.canAdd" [canDelete]="vehiclePhoto.canDelete" [category]="'vehiclePhoto'"
+                                        (toSave)="saveAttachment($event, 'vehiclePhoto')">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="vehiclePhoto.status === 'reproved' || vehiclePhoto.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="vehiclePhoto.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="vehiclePhoto.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('vehiclePhoto', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('vehiclePhoto', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="vehiclePhoto.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('vehiclePhoto', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_vehiclePhoto" class="{{ loadCssStatus(loading_vehiclePhoto, 'vehiclePhoto', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_driverPhoto, 'driverPhoto', 'content') }} {{ loadCssStatus(driverPhoto?.status) }}">
+                                <legend matTooltip="Anexo - (Máx. 1 arquivo no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto do motorista</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="driverPhoto.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="driverPhoto.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="driverPhoto.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="driverPhoto.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.driverPhoto" limit="1" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="driverPhoto.canAdd" [canDelete]="driverPhoto.canDelete" [category]="'driverPhoto'"
+                                        (toSave)="saveAttachment($event, 'driverPhoto')">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="driverPhoto.status === 'reproved' || driverPhoto.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="driverPhoto.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="driverPhoto.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('driverPhoto', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('driverPhoto', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="driverPhoto.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('driverPhoto', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_driverPhoto" class="{{ loadCssStatus(loading_driverPhoto, 'driverPhoto', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_antecedentPhoto, 'antecedentPhoto', 'content') }} {{ loadCssStatus(antecedentPhoto?.status) }}">
+                                <legend matTooltip="Anexos - (Máx. 5 arquivos no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto dos antecedentes</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="antecedentPhoto.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="antecedentPhoto.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="antecedentPhoto.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="antecedentPhoto.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.antecedentPhoto" limit="5" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="antecedentPhoto.canAdd" [canDelete]="antecedentPhoto.canDelete" [category]="'antecedentPhoto'"
+                                        (toSave)="saveAttachment($event, 'antecedentPhoto')">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="antecedentPhoto.status === 'reproved' || antecedentPhoto.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="antecedentPhoto.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="antecedentPhoto.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('antecedentPhoto', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('antecedentPhoto', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="antecedentPhoto.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('antecedentPhoto', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_antecedentPhoto" class="{{ loadCssStatus(loading_antecedentPhoto, 'antecedentPhoto', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset>
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_documentPhotoCRLV, 'documentPhotoCRLV', 'content') }} {{ loadCssStatus(documentPhotoCRLV?.status) }}">
+                                <legend matTooltip="Anexos - (Máx. 2 arquivos no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto do documento (CRLV)</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="documentPhotoCRLV.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="documentPhotoCRLV.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="documentPhotoCRLV.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="documentPhotoCRLV.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.documentPhotoCRLV" limit="2" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="documentPhotoCRLV.canAdd" [canDelete]="documentPhotoCRLV.canDelete" [category]="'documentPhotoCRLV'"
+                                        (toSave)="saveAttachment($event, 'documentPhotoCRLV')">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="documentPhotoCRLV.status === 'reproved' || documentPhotoCRLV.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="documentPhotoCRLV.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="documentPhotoCRLV.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('documentPhotoCRLV', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('documentPhotoCRLV', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="documentPhotoCRLV.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('documentPhotoCRLV', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_documentPhotoCRLV" class="{{ loadCssStatus(loading_documentPhotoCRLV, 'documentPhotoCRLV', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset> 
+                        </div>
+                        <div class="col-xs-12 col-sm-6 col-md-6 col-lg-6">
+                            <fieldset class="{{ loadCssStatus(loading_photoOfProofOfAddress, 'photoOfProofOfAddress', 'content') }} {{ loadCssStatus(photoOfProofOfAddress?.status) }}">
+                                <legend matTooltip="Anexo - (Máx. 1 arquivo no formato jpeg, jpg, png ou jfif)" matTooltipPosition="above">Foto do endereço</legend>
+                                <div class="contentIcon">
+                                    <span *ngIf="photoOfProofOfAddress.status === 'approved'">
+                                        <h4><mat-icon class="check_circle">check_circle</mat-icon>Aprovado</h4>
+                                    </span>
+                                    <span *ngIf="photoOfProofOfAddress.status === 'reproved'">
+                                        <h4><mat-icon class="cancel">cancel</mat-icon>Reprovado - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                    <span *ngIf="photoOfProofOfAddress.status === 'pending'">
+                                        <h4><mat-icon class="help">help</mat-icon>Pendente - Para aprovação.</h4>
+                                    </span>
+                                    <span *ngIf="photoOfProofOfAddress.status === 'revision'">
+                                        <h4><mat-icon class="error">error</mat-icon>Revisão - Envie os comprovantes novamente!</h4>
+                                    </span>
+                                </div>
+                                <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12 centralize">
+                                    <app-same-day-attach-file [files]="info.documents.photoOfProofOfAddress" limit="1" allowed="jpeg|jpg|png|jfif"
+                                        [canAdd]="photoOfProofOfAddress.canAdd" [canDelete]="photoOfProofOfAddress.canDelete"
+                                        (toSave)="saveAttachment($event, 'photoOfProofOfAddress')" [category]="'photoOfProofOfAddress'">
+                                    </app-same-day-attach-file>
+                                </div>
+                                <div *ngIf="photoOfProofOfAddress.status === 'reproved' || photoOfProofOfAddress.status === 'revision'">
+                                    <mat-form-field appearance="outline">
+                                        <mat-label>Motivo</mat-label>
+                                        <textarea matInput [(ngModel)]="photoOfProofOfAddress.reason" cdkAutosizeMinRows="1" cdkAutosizeMaxRows="5" disabled></textarea>
+                                    </mat-form-field>
+                                </div>
+                                <div *ngIf="photoOfProofOfAddress.actionApproved" class="row col-xs-12 col-sm-12 col-md-12 col-lg-12 contentApproval">
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('photoOfProofOfAddress', 'approved')" class="btn btn-custom approved">Aprovar</button>
+                                    </div>
+                                    <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                                        <button (click)="validateDocuments('photoOfProofOfAddress', 'reproved')" class="btn btn-custom reproved">Reprovar</button>
+                                    </div>
+                                </div>
+                                <div *ngIf="photoOfProofOfAddress.actionRevision" class="col-xs-12 col-sm-12 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                                    <button (click)="validateDocuments('photoOfProofOfAddress', 'revision')" class="btn btn-custom revision">revisar</button>
+                                </div>
+                                <div *ngIf="loading_photoOfProofOfAddress" class="{{ loadCssStatus(loading_photoOfProofOfAddress, 'photoOfProofOfAddress', 'overlay') }}">
+                                    <mat-spinner mode="indeterminate" strokeWidth="20" value="100"></mat-spinner>
+                                </div>
+                            </fieldset>
+                        </div>
+                    </div>
+                </fieldset>
+            </div>
+
+            <fieldset>
+                <legend>Contato</legend>
+                <div class="row">
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Telefone</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.contact.phone"
+                                mask="(00) 0000-0000||(00) 0 0000-0000" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>E-mail</mat-label>
+                            <input type="email" matInput [(ngModel)]="info.contact.email" autocomplete="off" 
+                                [disabled]="component === 'userDriverValidate'" required>
+                        </mat-form-field>
+                    </div>
+                    <div class="col-xs-12 col-sm-6 col-md-4 col-lg-4">
+                        <mat-form-field appearance="outline">
+                            <mat-label>Site</mat-label>
+                            <input type="text" matInput [(ngModel)]="info.contact.urlSite" autocomplete="off"
+                                [disabled]="component === 'userDriverValidate'">
+                        </mat-form-field>
+                    </div>
+                </div>
+            </fieldset>
+
+            <div *ngIf="component !== 'userDriverValidate'">
+                <fieldset>
+                    <legend>Senha de Login</legend>
+                    <div class="row">
+                        <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                            <form autocomplete="off">
+                                <mat-card>
+                                    <section style="margin-bottom: 15px;">
+                                        <mat-slide-toggle [checked]="showDetails" color="primary" (change)="strongPassword(!showDetails)">
+                                            Validação de Senha
+                                        </mat-slide-toggle>
+                                    </section>
+    
+                                    <mat-form-field appearance="outline">
+                                        <mat-icon matPrefix (click)="hide1 = !hide1">
+                                            {{hide1 ? 'visibility_off' : 'visibility'}}
+                                        </mat-icon>
+                                        <mat-label>Digite uma senha</mat-label>
+                                        <input matInput #password [type]="hide1 ? 'text' : 'password'" (ngModelChange)="sequenceCheck($event)"
+                                            name="password" onCopy="return false" onDrag="return false" onDrop="return false" onPaste="return false"
+                                            [(ngModel)]="info.password" maxlength="30">
+                                            <mat-hint align="end" aria-live="polite">
+                                                {{password?.value?.length}} / {{passwordComponent?.max}}
+                                            </mat-hint>
+                                    </mat-form-field>
+    
+                                    <mat-form-field appearance="outline">
+                                        <mat-icon matPrefix (click)="hide2 = !hide2">
+                                            {{hide2 ? 'visibility_off' : 'visibility'}}
+                                        </mat-icon>
+                                        <mat-label>Digite a senha novamente</mat-label>
+                                        <input matInput #passwordAgain [type]="hide2 ? 'text' : 'password'" name="passwordAgain" onCopy="return false"
+                                            onDrag="return false" onDrop="return false" onPaste="return false" [(ngModel)]="info.passwordAgain"
+                                            maxlength="30">
+                                        <mat-hint align="end" aria-live="polite">
+                                            {{passwordAgain?.value?.length}} / {{passwordComponent?.max}}
+                                        </mat-hint>
+                                    </mat-form-field>
+    
+                                    <mat-password-strength #passwordComponent (onStrengthChanged)="onStrengthChanged($event)"
+                                        [customValidator]="pattern" [min]="6" [password]="password.value">
+                                    </mat-password-strength>
+    
+                                    <div class="centralize">
+                                        <span *ngIf="checkStrongBar == 0" style="color: white"> Posição Help </span>
+                                        <span *ngIf="checkStrongBar > 1 && checkStrongBar < 40">Fraca</span>
+                                        <span *ngIf="checkStrongBar > 39 && checkStrongBar < 81">Média</span>
+                                        <span *ngIf="checkStrongBar > 81 && checkStrongBar <= 100">Segura</span>
+                                    </div>
+                                </mat-card>
+                            </form>
+                        </div>
+                        <div *ngIf="showDetails" class="col-xs-12 col-sm-12 col-md-6 col-lg-6" style="margin-top: 4%;">
+                            <mat-password-strength-info [passwordComponent]="passwordComponent"
+                                [lowerCaseCriteriaMsg]="'Contém pelo menos um caractere minúsculo'"
+                                [upperCaseCriteriaMsg]="'Contém pelo menos um caractere maiúsculo'"
+                                [digitsCriteriaMsg]="'Contém pelo menos um caractere numérico'"
+                                [specialCharsCriteriaMsg]="'Contém pelo menos um caractere especial'"
+                                [minCharsCriteriaMsg]="'Contém pelo menos 6 caracteres'"
+                                [customCharsCriteriaMsg]="'Atende aos requisitos de segurança'">
+                            </mat-password-strength-info>
+                        </div>
+                    </div>
+                </fieldset>
+    
+                <mat-checkbox color="primary" [(ngModel)]="info.termsAccepted"></mat-checkbox>
+                Aceito os <a class="link" (click)="seeAttached()">termos e condições de uso!</a>
+    
+                <div class="col-xs-12 col-sm-6 offset-sm-3 col-md-6 offset-md-3 col-lg-6 offset-lg-3">
+                    <button (click)="onSubmit(action)" class="btn btn-custom">
+                        {{ action === 'insert' ? 'Cadastrar' : 'Atualizar' }}
+                    </button>
+                </div> 
+            </div>
+            <div *ngIf="component !== 'userProfile'" class="buttonLogin">
+                <button (click)="navigateTo(null, component)" class="btn btn-custom">Voltar</button>
+            </div>
+        </div>
+    </div>
+</div>
