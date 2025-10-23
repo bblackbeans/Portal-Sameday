@@ -1,0 +1,41 @@
+<div *ngIf="category !== 'profilePicture'" class="attachments">
+    <ul>
+        <li class="active-icon" *ngFor="let f of (files);let i=index" [style.background-image]="'url(' + f.url + ')'">
+            <div class="content-icon">
+                <span (click)="downloadDoc(f)" matTooltip="Baixar imagem." matTooltipPosition="above">
+                    <mat-icon>cloud_download</mat-icon>
+                </span>
+                <span (click)="seeAttached(f)" matTooltip="Visualizar imagem." matTooltipPosition="above">
+                    <mat-icon>remove_red_eye</mat-icon>
+                </span>
+                <span *ngIf="canDelete" (click)="endpointDelete(f, i, 'deleteIndex')" matTooltip="Excluir imagem." matTooltipPosition="above">
+                    <mat-icon>delete</mat-icon>
+                </span>
+            </div>
+        </li>
+        <li class="cursorPointer noBorder" *ngIf="((files.length + 1) <= limit) && canAdd">
+            <div style="overflow:hidden" matTooltip="Clique ou arraste a imagem" matTooltipPosition="above">
+                <input type="file" (change)="changeListener($event)" />
+                <mat-icon class="add_circle_outline">add_circle_outline</mat-icon>
+            </div>
+        </li>
+        <li *ngIf="(files?.length>0) && canDelete" matTooltip="Excluir todos os anexos!" matTooltipPosition="right"
+            class="cursorPointer noBorder" style="position: relative;" (click)="endpointDelete(null, null, 'deleteAll')">
+            <mat-icon class="remove_circle_outline">remove_circle_outline</mat-icon>
+        </li>
+    </ul>
+</div>
+
+<div *ngIf="category === 'profilePicture'" class="profilePicture">
+    <ul class="{{ loadCssStatus(loading_profilePicture, 'profilePicture', 'content') }}">
+        <li class="profile-picture" [style.background-image]="'url(' + files[0]?.url + ')'">
+            <span class="profile-file">
+                <input type="file" title="Alterar Foto de Perfil" (change)="changeListener($event)" />
+                <mat-icon class="add_circle_outline">edit</mat-icon>
+            </span>
+            <div *ngIf="loading_profilePicture" class="{{ loadCssStatus(loading_profilePicture, 'profilePicture', 'overlay') }}">
+                <mat-spinner diameter="50"></mat-spinner>
+            </div>
+        </li>
+    </ul>
+</div>

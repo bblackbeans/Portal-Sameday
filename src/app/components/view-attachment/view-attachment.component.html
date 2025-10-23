@@ -1,0 +1,66 @@
+<h3 mat-dialog-title>Visualizando Anexo</h3>
+<div mat-dialog-content>
+    <div class="col-xs-12 col-sm-12 col-md-12 col-lg-12" id="scroll_2">
+        <div *ngIf="type === 'IMAGE'">
+            <div class="image-viewer">
+                <mat-button-toggle-group #group="matButtonToggleGroup">
+                    <mat-button-toggle matTooltip="Exportar imagem" matTooltipPosition="below" (click)="downloadDoc()">
+                        <mat-icon>cloud_download</mat-icon>
+                    </mat-button-toggle>
+                </mat-button-toggle-group>
+            </div>
+            <div class="contentImg">
+                <mat-card class="img-card">
+                    <img mat-card-image [src]="url" />
+                </mat-card>
+            </div>
+        </div>
+        <div *ngIf="type === 'PDF'" class="pdf-container">
+            <div class="pdf-viewer-wrap">
+                <div class="pdf-viewer-controls-wrap">
+                    <mat-button-toggle-group #group="matButtonToggleGroup">
+                        <mat-button-toggle matTooltip="Página anterior" matTooltipPosition="below"
+                            (click)="page === 1 ? null : prevPage()" [disabled]="page === 1">
+                            <mat-icon>arrow_back</mat-icon>
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Zoom -" matTooltipPosition="below" (click)="zoomOut()">
+                            <mat-icon>zoom_out</mat-icon>
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Zoom +" matTooltipPosition="below" (click)="zoomIn()">
+                            <mat-icon>zoom_in</mat-icon>
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Rotação para a esquerda" matTooltipPosition="below"
+                            (click)="rotateLeft()">
+                            <mat-icon>rotate_left</mat-icon>
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Rotação para a direita" matTooltipPosition="below"
+                            (click)="rotateRight()">
+                            <mat-icon>rotate_right</mat-icon>
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Exportar PDF" matTooltipPosition="below" (click)="downloadDoc()">
+                            <img src="assets/img/pdf.ico" alt="PDF" />
+                        </mat-button-toggle>
+                        <mat-button-toggle matTooltip="Próxima página" matTooltipPosition="below"
+                            (click)="page === totalPages ? null : nextPage()" [disabled]="page === totalPages">
+                            <mat-icon>arrow_forward</mat-icon>
+                        </mat-button-toggle>
+                    </mat-button-toggle-group>
+                    <div class="contentPages">
+                        {{ page }} / {{ totalPages }}
+                    </div>
+                </div>
+                <div class="pdf-viewer-viewer-window">
+                    <pdf-viewer crossorigin="anonymous" [src]="url" [render-text]="renderText" id="scroll_1"
+                        [render-text-mode]="renderTextMode" [rotation]="rotation" [zoom]="zoom" [zoom-scale]="zoomScale"
+                        [original-size]="originalSize" [fit-to-page]="fitToPage" [show-all]="showAll"
+                        [autoresize]="autoresize" [show-borders]="showBorders" [page]="page"
+                        (after-load-complete)="afterLoadComplete($event)">
+                    </pdf-viewer>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div mat-dialog-actions class="right">
+    <button mat-raised-button (click)="close()">Fechar</button>
+</div>

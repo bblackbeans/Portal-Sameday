@@ -1,0 +1,125 @@
+.attachments {
+    display: inline-flex;
+
+    ul {
+        display: flex;
+        flex-wrap: wrap;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+        padding-left: 0px !important;
+
+        li {
+            float: left;
+            width: 120px;
+            height: 120px;
+            border: 1px solid #aaa;
+            margin: 3px;
+            text-align: center;
+            overflow: hidden;
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            border-radius: 5px;
+        }
+    }
+
+    input[type="file"],
+    input[type="file"]::-webkit-file-upload-button {
+        position: absolute;
+        opacity: 0;
+        cursor: pointer;
+        height: 82px;
+        width: 82px;
+    }
+
+    .add_circle_outline,
+    .remove_circle_outline {
+        color: #777;
+        margin-top: 45px;
+    }
+}
+
+.profilePicture {
+    display: inline-flex;
+
+    .add_circle_outline {
+        font-size: 30px;
+        color: #9c27b0;
+        margin-top: 22px !important;
+        padding-left: 22px !important;
+    }
+
+    ul {
+        .contentProfilePicture {
+            margin: 10px 0;
+            text-align: center;
+            position: relative;
+        }
+
+        li {
+            left: 20px;
+            width: 72px;
+            height: 72px;
+            overflow: hidden;
+            position: absolute;
+            background-size: cover;
+
+            .overlayProfilePicture {
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                display: flex;
+                position: absolute;
+                align-items: center;
+                justify-content: center;
+            }
+        }
+    }
+
+    input[type="file"],
+    input[type="file"]::-webkit-file-upload-button {
+        opacity: 0;
+        width: 72px;
+        height: 72px;
+        cursor: pointer;
+        position: absolute;
+    }
+
+    .profile-picture {
+        border-radius: 50% !important;
+    }
+
+    .profile-file {
+        cursor: pointer;
+        display: none !important;
+    }
+
+    .profile-picture:hover {
+        opacity: 0.3;
+
+        .profile-file {
+            display: block !important;
+        }
+    }
+}
+
+.noBorder {
+    border: none !important;
+}
+
+.content-icon {
+    height: 30px;
+    opacity: 0.7;
+    padding-top: 2px;
+    text-align: center;
+    background-color: white;
+
+    mat-icon {
+        cursor: pointer;
+        margin: 0px 5px;
+        color: black !important;
+    }
+}

@@ -1,0 +1,17 @@
+<section class="content page">
+    <div class="container-fluid">
+        <div class="content-not-found">
+            <i class="mdi mdi-account-hard-hat"></i>
+            <h2>Página não encontrada :(</h2>
+            <h3>A Página que você tentou acessar está indisponível ou não existe.</h3>
+            <div class="centralize">
+                <button *ngIf="allowsPreviousPage" (click)="previousPage()" class="btn btn-custom previous-page">
+                    Retorna para o sistema
+                </button>
+                <button (click)="homePage()" class="btn btn-custom home-page">
+                    Me leve para a página inicial
+                </button>
+            </div>
+        </div>
+    </div>
+</section>

@@ -1,0 +1,32 @@
+.content-not-found {
+    margin-top: 10%;
+    color: black;
+    text-align: center;
+
+    i {
+        font-size: 60px;
+        margin-bottom: 10px;
+    }
+
+    button {
+        width: 250px;
+        font-size: 10pt;
+        text-transform: none !important;
+    }
+
+    .home-page {
+        color: black;
+        margin-left: 5px;
+        background-color: #ccc;
+    }
+
+    .previous-page {
+        margin-right: 5px;
+        background-color: #3d4c5a;
+    }
+
+    h2,
+    h3 {
+        font-family: "FontAwesome";
+    }
+}
