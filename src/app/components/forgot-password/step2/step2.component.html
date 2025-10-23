@@ -1,0 +1,24 @@
+<h1 class="title">
+    Recuperar Senha
+    <div class="msg">
+        Você recebeu um código por SMS<br />
+        Informe o código de verificação
+    </div>
+</h1>
+<div class="col-md-12">
+    <div class="col-12">
+        <!-- Código -->
+        <mat-form-field appearance="outline">
+            <mat-icon matPrefix>perm_phone_msg</mat-icon>
+            <mat-label>Código</mat-label>
+            <input type="text" matInput [(ngModel)]="auth.code" mask="0 0 0 0 0 0" autocomplete="off" required>
+        </mat-form-field>
+
+        <div class="button-container">
+            <div class="spinner-container" *ngIf="loading">
+                <mat-spinner diameter="24"></mat-spinner>
+            </div>
+            <button [disabled]="!isValid() || loading" (click)="isValid() ? step_2() : null" class="btn btn-custom">Enviar</button>
+        </div>
+    </div>
+</div>

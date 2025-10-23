@@ -1,0 +1,69 @@
+<div class="changePassword">
+    <h1 class="title">
+        Alterar Senha
+    </h1>
+    <div class="col-md-12">
+        <fieldset>
+            <legend>Exemplo de uma senha forte: SameDay@1</legend>
+            <div class="row">
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6">
+                    <form autocomplete="off">
+                        <mat-card>
+                            <mat-form-field appearance="outline">
+                                <mat-icon matPrefix (click)="hide1 = !hide1">
+                                    {{hide1 ? 'visibility_off' : 'visibility'}}
+                                </mat-icon>
+                                <mat-label>Digite uma senha</mat-label>
+                                <input matInput #password [type]="hide1 ? 'text' : 'password'" (ngModelChange)="sequenceCheck($event)" name="password" onCopy="return false"
+                                    onDrag="return false" onDrop="return false" onPaste="return false" [(ngModel)]="auth.password" maxlength="30">
+                                <mat-hint align="end" aria-live="polite">
+                                    {{password?.value?.length}} / {{passwordComponent?.max}}
+                                </mat-hint>
+                            </mat-form-field>
+    
+                            <mat-form-field appearance="outline">
+                                <mat-icon matPrefix (click)="hide2 = !hide2">
+                                    {{hide2 ? 'visibility_off' : 'visibility'}}
+                                </mat-icon>
+                                <mat-label>Digite a senha novamente</mat-label>
+                                <input matInput #passwordAgain [type]="hide2 ? 'text' : 'password'" name="passwordAgain"  onCopy="return false" 
+                                    onDrag="return false" onDrop="return false" onPaste="return false" [(ngModel)]="auth.passwordAgain" maxlength="30">
+                                <mat-hint align="end" aria-live="polite">
+                                    {{passwordAgain?.value?.length}} / {{passwordComponent?.max}}
+                                </mat-hint>
+                            </mat-form-field>
+    
+                            <mat-password-strength #passwordComponent (onStrengthChanged)="onStrengthChanged($event)"
+                                [customValidator]="pattern" [min]="6" [password]="password.value">
+                            </mat-password-strength>
+    
+                            <div class="centralize">
+                                <span *ngIf="checkStrongBar == 0" style="color: white"> Posição Help </span>
+                                <span *ngIf="checkStrongBar > 1 && checkStrongBar < 40">Fraca</span>
+                                <span *ngIf="checkStrongBar > 39 && checkStrongBar < 81">Média</span>
+                                <span *ngIf="checkStrongBar > 81 && checkStrongBar <= 100">Segura</span>
+                            </div>
+                        </mat-card>
+                    </form>
+                </div>
+                <div class="col-xs-12 col-sm-12 col-md-6 col-lg-6 secureInformation" style="margin-top: 4%;">
+                    <mat-password-strength-info [passwordComponent]="passwordComponent"
+                        [lowerCaseCriteriaMsg]="'Contém pelo menos um caractere minúsculo'"
+                        [upperCaseCriteriaMsg]="'Contém pelo menos um caractere maiúsculo'"
+                        [digitsCriteriaMsg]="'Contém pelo menos um caractere numérico'"
+                        [specialCharsCriteriaMsg]="'Contém pelo menos um caractere especial'"
+                        [minCharsCriteriaMsg]="'Contém pelo menos 6 caracteres'"
+                        [customCharsCriteriaMsg]="'Atende aos requisitos de segurança'">
+                    </mat-password-strength-info>
+                </div>
+            </div>
+        </fieldset>
+        <div class="button-container">
+            <div class="spinner-container" *ngIf="loading">
+                <mat-spinner diameter="24"></mat-spinner>
+            </div>
+            <button [disabled]="!isValid() || loading" (click)="isValid() ? step_3() : null"
+                class="btn btn-custom">Atualizar</button>
+        </div>
+    </div>
+</div>
