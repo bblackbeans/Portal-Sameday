@@ -34,10 +34,13 @@ export class SettingsService {
 
     switch (parameter) {
       case 'portal':
-        setUrl = `${endpointV2}/${parameter}/v2`;
+        setUrl = `${endpointV2}/portal/v2`;
         break;
       case 'v2':
-        setUrl = `${endpointV2}/${parameter}`;
+        setUrl = `${endpointV2}/v2`;
+        break;
+      case 'api':
+        setUrl = `${endpointV2}`;
         break;
     }
 
