@@ -33,7 +33,7 @@ export class AttachFileService {
   }
 
   public putProfilePicture(params: any) {
-    const url = this._settings.getEndPoint('portal') + '/user/avatar';
+    const url = this._settings.getEndPoint('v2') + '/user/avatar';
 
     return this._http.put(url, params);
   }
