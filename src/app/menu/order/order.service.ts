@@ -55,7 +55,7 @@ export class OrderService {
   }
 
   public getZipCode(zipCode: string) {
-    const url = this._settings.getEndPoint('v2') + '/zipe_code';
+    const url = this._settings.getEndPoint('v2') + '/zip_code';
 
     return this._http.get(url, { zipCode });
   }
