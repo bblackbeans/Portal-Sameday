@@ -137,24 +137,37 @@ export class NewOrderComponent implements OnInit {
           complement: address.complement,
         }
 
-        const x = await this._orderService.getLatLngThroughAddress(ad).toPromise();
-        if (x.status === 'success') {
-          if (this.newOrder[tab].location) {
-            this.newOrder[tab].location.lat = x.location.lat;
-            this.newOrder[tab].location.lng = x.location.lng;
-          } else {
-            this.newOrder[tab].location = { lat: x.location.lat, lng: x.location.lng };
-          }
+        try {
+          const x = await this._orderService.getLatLngThroughAddress(ad).toPromise();
+          if (x.status === 'success') {
+            if (this.newOrder[tab].location) {
+              this.newOrder[tab].location.lat = x.location.lat;
+              this.newOrder[tab].location.lng = x.location.lng;
+            } else {
+              this.newOrder[tab].location = { lat: x.location.lat, lng: x.location.lng };
+            }
 
-          if (stepper.selectedIndex == 0) {
-            this.markerA = new google.maps.LatLng(x.location.lat, x.location.lng)
+            if (stepper.selectedIndex == 0) {
+              this.markerA = new google.maps.LatLng(x.location.lat, x.location.lng)
+            }
+            if (stepper.selectedIndex == 2) {
+              this.markerB = new google.maps.LatLng(x.location.lat, x.location.lng)
+            }
+          } else if (x.status === 'error') {
+            console.warn('Erro ao obter coordenadas:', x.message);
+            // Continua o fluxo mesmo com erro de coordenadas
+            // Define coordenadas padrão para não quebrar o fluxo
+            if (!this.newOrder[tab].location) {
+              this.newOrder[tab].location = { lat: -23.5505, lng: -46.6333 }; // Coordenadas padrão SP
+            }
           }
-          if (stepper.selectedIndex == 2) {
-            this.markerB = new google.maps.LatLng(x.location.lat, x.location.lng)
+        } catch (error) {
+          console.warn('Erro na requisição de coordenadas:', error);
+          // Continua o fluxo mesmo com erro
+          // Define coordenadas padrão para não quebrar o fluxo
+          if (!this.newOrder[tab].location) {
+            this.newOrder[tab].location = { lat: -23.5505, lng: -46.6333 }; // Coordenadas padrão SP
           }
-
-        } else if (x.status === 'error') {
-          this.msgError(x);
         }
 
         if (this.editAddressTab || stepper.selectedIndex === 2) {
