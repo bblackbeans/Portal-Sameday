@@ -13,12 +13,12 @@
 ## 🔐 **1. AUTENTICAÇÃO E CADASTRO**
 
 ### **1.1 - LOGIN**
-- [ ] **Teste 1:** Login com usuário válido
-  - **Usuário:** `13161974417`
-  - **Senha:** `Tentarlogar580`
+- [x] **Teste 1:** Login com usuário válido ✅
+  - **Usuário:** `13161974417` (também testado: `256.991.760-55`)
+  - **Senha:** `Facil12@`
   - **Resultado esperado:** ✅ Login bem-sucedido, redireciona para dashboard
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ✅ CONFIRMADO - FUNCIONANDO
+  - **Observações:** Login funciona perfeitamente com CPF e senha
 
 - [ ] **Teste 2:** Login com credenciais inválidas
   - **Usuário:** `invalido`
@@ -64,11 +64,11 @@
 ## 📦 **2. GESTÃO DE PEDIDOS**
 
 ### **2.1 - LISTAGEM DE PEDIDOS**
-- [ ] **Teste 8:** Visualizar lista de pedidos
+- [x] **Teste 8:** Visualizar lista de pedidos ✅
   - **Ações:** Acessar `/order/list`
   - **Resultado esperado:** ✅ Exibe tabela com pedidos
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ✅ CONFIRMADO - FUNCIONANDO
+  - **Observações:** Página carrega corretamente, filtros visíveis, botão "Novo Pedido" funciona
 
 - [ ] **Teste 9:** Filtrar pedidos por status
   - **Ações:** Selecionar filtro (Pendente, Em andamento, Concluído)
@@ -83,29 +83,29 @@
   - **Observações:** ___________________________________________________
 
 ### **2.2 - CRIAR PEDIDO**
-- [ ] **Teste 11:** Preencher dados da retirada
+- [x] **Teste 11:** Preencher dados da retirada ✅
   - **Ações:** Preencher CPF/CNPJ, Nome, Endereço completo
   - **Resultado esperado:** ✅ Valida campos e permite avançar
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ✅ CONFIRMADO - FUNCIONANDO
+  - **Observações:** Todos os campos funcionam, validação ativa, campos obrigatórios funcionam corretamente
 
-- [ ] **Teste 12:** Buscar CEP da retirada
+- [ ] **Teste 12:** Buscar CEP da retirada ⚠️
   - **Ações:** Digitar CEP e clicar no ícone de lupa
   - **Resultado esperado:** ✅ Preenche endereço automaticamente
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ⚠️ ERRO 404 - API não implementada
+  - **Observações:** API /v2/zip_code retorna 404, mas tratamento de erro implementado, usuário pode preencher manualmente
 
-- [ ] **Teste 13:** Avançar para etapa "OBJETO"
+- [x] **Teste 13:** Avançar para etapa "OBJETO" ✅
   - **Ações:** Preencher retirada e clicar "PRÓXIMO"
   - **Resultado esperado:** ✅ Avança para próxima aba
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ✅ CONFIRMADO - FUNCIONANDO
+  - **Observações:** Botão PRÓXIMO funciona, avança corretamente mesmo com erro de API coordenadas (correção implementada funcionando!)
 
-- [ ] **Teste 14:** Preencher dados do objeto
+- [x] **Teste 14:** Preencher dados do objeto ✅
   - **Ações:** Nome, Modelo, Dimensões, Peso, Quantidade
   - **Resultado esperado:** ✅ Permite adicionar objeto
-  - **Status:** _______
-  - **Observações:** ___________________________________________________
+  - **Status:** ✅ CONFIRMADO - FUNCIONANDO
+  - **Observações:** Todos os campos funcionam, dropdowns funcionam, validação ativa
 
 - [ ] **Teste 15:** Adicionar múltiplos objetos
   - **Ações:** Clicar em "Adicionar" objeto
