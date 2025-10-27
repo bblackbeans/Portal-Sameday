@@ -78,11 +78,18 @@ export class HttpService {
     }
 
     this.prepareHeader(headers, url);
-    const options = { headers: this.headers, params: new HttpParams() };
-
+    
+    // Construir query parameters corretamente
+    let httpParams = new HttpParams();
     if (params) {
-      options.params = params;
+      Object.keys(params).forEach(key => {
+        if (params[key] !== null && params[key] !== undefined) {
+          httpParams = httpParams.set(key, params[key].toString());
+        }
+      });
     }
+    
+    const options = { headers: this.headers, params: httpParams };
 
     return this._http.get(url, options).pipe(
       retryWhen((errors: Observable<any>) => errors.pipe(
@@ -107,7 +114,8 @@ export class HttpService {
     this.prepareHeader(headers, url);
     const options = { headers: this.headers };
 
-    return this._http.post(url, { params }, options).pipe(
+    // Enviar params diretamente no body, não encapsulado em { params }
+    return this._http.post(url, params || {}, options).pipe(
       map(this.extractData),
       catchError(this.handleError));
   }
@@ -121,7 +129,8 @@ export class HttpService {
     this.prepareHeader(headers, url);
     const options = { headers: this.headers };
 
-    return this._http.put(url, { params }, options).pipe(
+    // Enviar params diretamente no body, não encapsulado em { params }
+    return this._http.put(url, params || {}, options).pipe(
       map(this.extractData),
       catchError(this.handleError));
   }

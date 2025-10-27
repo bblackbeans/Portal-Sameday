@@ -45,8 +45,14 @@ export class ViewOrderComponent implements OnInit {
           const locationA = information.withdraw.location;
           const locationB = information.destiny.location;
 
-          this.markerA = new google.maps.LatLng(locationA.lat, locationA.lng)
-          this.markerB = new google.maps.LatLng(locationB.lat, locationB.lng)
+          // Usar coordenadas se disponíveis, senão usar coordenadas padrão
+          const latA = locationA?.lat || -23.5505;
+          const lngA = locationA?.lng || -46.6333;
+          const latB = locationB?.lat || -23.5505;
+          const lngB = locationB?.lng || -46.6333;
+
+          this.markerA = new google.maps.LatLng(latA, lngA)
+          this.markerB = new google.maps.LatLng(latB, lngB)
 
           const summarizeParams = {
             km: x.order.km,

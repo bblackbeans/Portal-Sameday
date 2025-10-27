@@ -6,6 +6,17 @@ export class FunctionsService {
   constructor() { }
 
   public treatsErrorMessage(msg: string = '', err): string {
+    // Tratar erros HTTP do HttpClient
+    if (err && err.error) {
+      err = err.error; // Extrair o erro real
+    }
+    
+    // Tratar ProgressEvent (erro de requisição)
+    if (err && err.name === 'ProgressEvent') {
+      msg = 'Erro ao conectar com o servidor. Verifique sua conexão.';
+      return msg;
+    }
+    
     if (typeof err.additionalFriendly === 'object') {
       msg = err.message ? err.message + '<br/>' : '';
       for (const i of err.additionalFriendly) {
@@ -14,11 +25,11 @@ export class FunctionsService {
       msg = (msg === '' ? '' : '<ul>' + msg + '</ul>');
     } else if (typeof err.additionalFriendly === 'string') {
       msg = err.message + '<br/>' + err.additionalFriendly;
+    } else if (err && err.message) {
+      msg = err.message;
     } else {
-      msg = err.message ? err.message : err ? err : '';
+      msg = 'Erro desconhecido, por favor informar ao Administrador do sistema. cód: m_esid-987';
     }
-
-    msg = (msg === '' ? 'Erro desconhecido, por favor informar ao Administrador do sistema. cód: m_esid-987' : msg);
 
     return msg;
   }

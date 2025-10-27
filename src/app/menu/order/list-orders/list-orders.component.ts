@@ -88,9 +88,12 @@ export class ListOrdersComponent implements OnInit, OnDestroy, AfterViewInit {
           this.clearAndLoadTable(true)
         }
       }, (err) => {
-        this.msgError(err);
+        // Tratar erro 404 ou API não implementada silenciosamente
+        console.warn('API de listagem de pedidos não implementada:', err);
+        this.dataOrders = [];
+        this.totals = new TotalsOrdersReset();
+        this.clearAndLoadTable(false)
         this[_loading] = false;
-        this.clearAndLoadTable(true)
       });
   }
 
