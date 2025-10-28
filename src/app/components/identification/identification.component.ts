@@ -474,11 +474,14 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     const label_cpfcnpj = this.typeOfUser === 'business' ? 'CNPJ' : 'CPF';
     const label_name = this.typeOfUser === 'business' ? 'razão social' : 'nome completo';
 
+    // Não validar CPF/CNPJ para admin ou se campo estiver desabilitado (update)
+    const shouldValidateCPF = this.profileLoggedUser !== 'administrator' || this.component === 'userProfile';
+    
     if (!i.data.cpfcnpj) {
       this._modalAlertService.alertModal('Ops!', 'Por favor preencha o campo ' + label_cpfcnpj + '!');
       return false;
 
-    } else if (this.typeOfUser === 'business' ? !this._functions.validateCNPJ(i.data.cpfcnpj) : !this._functions.validateCPF(i.data.cpfcnpj)) {
+    } else if (shouldValidateCPF && (this.typeOfUser === 'business' ? !this._functions.validateCNPJ(i.data.cpfcnpj) : !this._functions.validateCPF(i.data.cpfcnpj))) {
       this._modalAlertService.alertModal('Ops!', 'O campo ' + label_cpfcnpj + ' não é válido.');
       return false;
 

@@ -109,11 +109,21 @@ export class DashboardComponent implements OnInit {
     this._dashboardService.getDashboardData()
       .subscribe((x) => {
         if (x.status === 'success') {
-          // Tratar caso API retorne null ou undefined
-          if (x.totals) {
-            this.totals = x.totals;
-          } else {
-            // Se não tiver dados, manter totals vazio
+          // Tratar caso API retorne null ou undefined de forma segura
+          try {
+            if (x.totals && typeof x.totals === 'object') {
+              // Garantir que todos os campos existem antes de usar
+              this.totals = {
+                kms: x.totals.kms || 0,
+                driver: x.totals.driver || x.totals.drivers || 0,
+                client: x.totals.client || x.totals.clients || 0,
+                goodsDelivered: x.totals.goodsDelivered || x.totals.merchandise || 0
+              };
+            } else {
+              this.totals = new TotalsReset();
+            }
+          } catch (error) {
+            console.warn('Erro ao processar totals do dashboard:', error);
             this.totals = new TotalsReset();
           }
 
@@ -127,6 +137,7 @@ export class DashboardComponent implements OnInit {
       }, (err) => {
         // Tratar erro de forma não-bloqueante
         console.warn('Erro ao carregar dados do dashboard:', err);
+        // Não mostrar modal de erro para dashboard, só logar no console
         this.totals = new TotalsReset();
         this[_loading] = false;
       });
