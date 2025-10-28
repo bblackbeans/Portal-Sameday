@@ -115,12 +115,21 @@ export class HttpService {
     const isFormData = params instanceof FormData;
     
     this.prepareHeader(headers, url, isFormData);
-    const options = { headers: this.headers };
-
-    // Se for FormData, remover Content-Type para o browser adicionar automaticamente com boundary
-    if (isFormData && this.headers.has('Content-Type')) {
-      this.headers = this.headers.delete('Content-Type');
+    
+    // Se for FormData, criar novos headers sem Content-Type
+    let finalHeaders = this.headers;
+    if (isFormData) {
+      // Criar novos headers sem Content-Type para que o browser defina multipart/form-data automaticamente
+      const headerMap: any = {};
+      this.headers.keys().forEach(key => {
+        if (key.toLowerCase() !== 'content-type') {
+          headerMap[key] = this.headers.get(key);
+        }
+      });
+      finalHeaders = new HttpHeaders(headerMap);
     }
+    
+    const options = { headers: finalHeaders };
 
     // Enviar params diretamente no body, não encapsulado em { params }
     return this._http.post(url, params || {}, options).pipe(
@@ -138,12 +147,21 @@ export class HttpService {
     const isFormData = params instanceof FormData;
     
     this.prepareHeader(headers, url, isFormData);
-    const options = { headers: this.headers };
-
-    // Se for FormData, remover Content-Type para o browser adicionar automaticamente com boundary
-    if (isFormData && this.headers.has('Content-Type')) {
-      this.headers = this.headers.delete('Content-Type');
+    
+    // Se for FormData, criar novos headers sem Content-Type
+    let finalHeaders = this.headers;
+    if (isFormData) {
+      // Criar novos headers sem Content-Type para que o browser defina multipart/form-data automaticamente
+      const headerMap: any = {};
+      this.headers.keys().forEach(key => {
+        if (key.toLowerCase() !== 'content-type') {
+          headerMap[key] = this.headers.get(key);
+        }
+      });
+      finalHeaders = new HttpHeaders(headerMap);
     }
+    
+    const options = { headers: finalHeaders };
 
     // Enviar params diretamente no body, não encapsulado em { params }
     return this._http.put(url, params || {}, options).pipe(

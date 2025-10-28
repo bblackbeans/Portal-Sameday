@@ -474,18 +474,24 @@ export class IdentificationComponent implements OnInit, OnDestroy {
     const label_cpfcnpj = this.typeOfUser === 'business' ? 'CNPJ' : 'CPF';
     const label_name = this.typeOfUser === 'business' ? 'razão social' : 'nome completo';
 
-    // Não validar CPF/CNPJ para admin ou se campo estiver desabilitado (update)
-    const shouldValidateCPF = this.profileLoggedUser !== 'administrator' || this.component === 'userProfile';
-    
     if (!i.data.cpfcnpj) {
       this._modalAlertService.alertModal('Ops!', 'Por favor preencha o campo ' + label_cpfcnpj + '!');
       return false;
 
-    } else if (shouldValidateCPF && (this.typeOfUser === 'business' ? !this._functions.validateCNPJ(i.data.cpfcnpj) : !this._functions.validateCPF(i.data.cpfcnpj))) {
-      this._modalAlertService.alertModal('Ops!', 'O campo ' + label_cpfcnpj + ' não é válido.');
-      return false;
+    } else {
+      // Remover máscara antes de validar
+      const cpfcnpjClean = i.data.cpfcnpj.replace(/[^\d]/g, '');
+      const isValid = this.typeOfUser === 'business' ? 
+        this._functions.validateCNPJ(cpfcnpjClean) : 
+        this._functions.validateCPF(cpfcnpjClean);
+      
+      if (!isValid) {
+        this._modalAlertService.alertModal('Ops!', 'O campo ' + label_cpfcnpj + ' não é válido.');
+        return false;
+      }
+    }
 
-    } else if (!i.data.name) {
+    if (!i.data.name) {
       this._modalAlertService.alertModal('Ops!', 'Por favor preencha o campo ' + label_name + '!');
       return false;
 

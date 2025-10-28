@@ -408,11 +408,20 @@ export class NewOrderComponent implements OnInit {
       this._modalAlertService.alertModal('Ops!', 'Por favor preencha o campo ' + label_cpfcnpj + '!');
       return false;
 
-    } else if (o.typeUser === 'business' ? !this._functions.validateCNPJ(o.cpfcnpj) : !this._functions.validateCPF(o.cpfcnpj)) {
-      this._modalAlertService.alertModal('Ops!', 'O campo ' + label_cpfcnpj + ' não é válido.');
-      return false;
+    } else {
+      // Remover máscara antes de validar
+      const cpfcnpjClean = o.cpfcnpj.replace(/[^\d]/g, '');
+      const isValid = o.typeUser === 'business' ? 
+        this._functions.validateCNPJ(cpfcnpjClean) : 
+        this._functions.validateCPF(cpfcnpjClean);
+      
+      if (!isValid) {
+        this._modalAlertService.alertModal('Ops!', 'O campo ' + label_cpfcnpj + ' não é válido.');
+        return false;
+      }
+    }
 
-    } else if (!o.name) {
+    if (!o.name) {
       this._modalAlertService.alertModal('Ops!', 'Por favor preencha o campo ' + label_name + '!');
       return false;
 
