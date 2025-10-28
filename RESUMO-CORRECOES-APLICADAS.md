@@ -134,3 +134,4 @@ try {
 
 Alguns problemas (upload imagens, editar pedido) precisam de informações da API (console/network tab) para diagnosticar corretamente. As correções aplicadas devem resolver 50% dos problemas reportados.
 
+

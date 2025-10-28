@@ -75,29 +75,42 @@ export class DashboardComponent implements OnInit {
     this._dashboardService.getDashboardGraphics({ type: option })
       .subscribe((x) => {
         if (x.status === 'success') {
-          const { client, driver, goodsDelivered, kms } = x.totals;
+          // Verificar se totals existe e tem as propriedades necessárias
+          try {
+            const { client, driver, goodsDelivered, kms } = x.totals || {};
+            
+            // Usar valores padrão se algum objeto for null/undefined
+            const driverData = driver || { an: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0 };
+            const clientData = client || { an: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0 };
+            const kmsData = kms || { an: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0 };
+            const goodsData = goodsDelivered || { an: 0, two: 0, three: 0, four: 0, five: 0, six: 0, seven: 0 };
 
-          setTimeout(() => {
-            this.barChartDataDriver = [
-              { data: [driver.an, driver.two, driver.three, driver.four, driver.five, driver.six, driver.seven], label: 'Motoristas' },
-            ]
-            this.barChartDataClient = [
-              { data: [client.an, client.two, client.three, client.four, client.five, client.six, client.seven], label: 'Clientes' },
-            ]
-            this.barChartDataKms = [
-              { data: [kms.an, kms.two, kms.three, kms.four, kms.five, kms.six, kms.seven], label: 'KMs rodados' },
-            ]
-            this.barChartDataGoodsDelivered = [
-              { data: [goodsDelivered.an, goodsDelivered.two, goodsDelivered.three, goodsDelivered.four, goodsDelivered.five, goodsDelivered.six, goodsDelivered.seven], label: 'Em mercadoria entregue' }
-            ]
+            setTimeout(() => {
+              this.barChartDataDriver = [
+                { data: [driverData.an || 0, driverData.two || 0, driverData.three || 0, driverData.four || 0, driverData.five || 0, driverData.six || 0, driverData.seven || 0], label: 'Motoristas' },
+              ]
+              this.barChartDataClient = [
+                { data: [clientData.an || 0, clientData.two || 0, clientData.three || 0, clientData.four || 0, clientData.five || 0, clientData.six || 0, clientData.seven || 0], label: 'Clientes' },
+              ]
+              this.barChartDataKms = [
+                { data: [kmsData.an || 0, kmsData.two || 0, kmsData.three || 0, kmsData.four || 0, kmsData.five || 0, kmsData.six || 0, kmsData.seven || 0], label: 'KMs rodados' },
+              ]
+              this.barChartDataGoodsDelivered = [
+                { data: [goodsData.an || 0, goodsData.two || 0, goodsData.three || 0, goodsData.four || 0, goodsData.five || 0, goodsData.six || 0, goodsData.seven || 0], label: 'Em mercadoria entregue' }
+              ]
+              this.graphicsLoading = false;
+            }, 500);
+          } catch (error) {
+            console.warn('Erro ao processar gráficos do dashboard:', error);
             this.graphicsLoading = false;
-          }, 500);
+          }
         } else if (x.status === 'error') {
           this.msgError(x);
           this.graphicsLoading = false;
         }
       }, (err) => {
-        this.msgError(err);
+        console.warn('Erro ao carregar gráficos:', err);
+        // Não mostrar modal de erro para gráficos
         this.graphicsLoading = false;
       });
   }
