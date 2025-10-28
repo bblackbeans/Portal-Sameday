@@ -38,8 +38,7 @@ export class UsersService {
 
   // Deletar usuário
   public deleteUser(id: string) {
-    // Endpoint correto conforme documentação da API
-    const url = this._settings.getEndPoint('portal') + `/v2/user/${id}`;
+    const url = this._settings.getEndPoint('v2') + `/user/${id}`;
     return this._http.delete(url);
   }
 
