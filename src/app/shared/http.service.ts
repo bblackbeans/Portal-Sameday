@@ -37,10 +37,10 @@ export class HttpService {
     return Promise.reject(errMsg);
   }
 
-  private prepareHeader(headers: HttpHeaders, url: string): void {
+  private prepareHeader(headers: HttpHeaders, url: string, skipContentType?: boolean): void {
     this.headers = headers ? headers : new HttpHeaders({ 'Content-Type': 'application/json; charset=utf-8' });
 
-    if (!this.headers.get('Content-type')) {
+    if (!this.headers.get('Content-type') && !skipContentType) {
       this.headers = this.headers.set('Content-Type', 'application/json; charset=utf-8');
     }
 
@@ -111,8 +111,16 @@ export class HttpService {
       return this.retornaIdle('post: ' + url);
     }
 
-    this.prepareHeader(headers, url);
+    // Verificar se params é FormData (para upload de arquivos)
+    const isFormData = params instanceof FormData;
+    
+    this.prepareHeader(headers, url, isFormData);
     const options = { headers: this.headers };
+
+    // Se for FormData, remover Content-Type para o browser adicionar automaticamente com boundary
+    if (isFormData && this.headers.has('Content-Type')) {
+      this.headers = this.headers.delete('Content-Type');
+    }
 
     // Enviar params diretamente no body, não encapsulado em { params }
     return this._http.post(url, params || {}, options).pipe(
@@ -126,8 +134,16 @@ export class HttpService {
       return this.retornaIdle('put: ' + url);
     }
 
-    this.prepareHeader(headers, url);
+    // Verificar se params é FormData (para upload de arquivos)
+    const isFormData = params instanceof FormData;
+    
+    this.prepareHeader(headers, url, isFormData);
     const options = { headers: this.headers };
+
+    // Se for FormData, remover Content-Type para o browser adicionar automaticamente com boundary
+    if (isFormData && this.headers.has('Content-Type')) {
+      this.headers = this.headers.delete('Content-Type');
+    }
 
     // Enviar params diretamente no body, não encapsulado em { params }
     return this._http.put(url, params || {}, options).pipe(

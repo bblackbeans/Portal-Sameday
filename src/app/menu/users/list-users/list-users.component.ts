@@ -100,7 +100,28 @@ export class ListUsersComponent implements OnInit {
     }
   }
 
-  deleteUser(id) { }
+  deleteUser(id) {
+    this._modalAlertService.confirmModal(
+      'Confirmar Exclusão',
+      'Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.',
+      'Excluir',
+      'Cancelar'
+    ).subscribe((result) => {
+      if (result) {
+        this._usersService.deleteUser(id)
+          .subscribe((x) => {
+            if (x.status === 'success') {
+              this._modalAlertService.alertModal('Sucesso!', 'Usuário excluído com sucesso.');
+              this.getUsers('listLoading');
+            } else if (x.status === 'error') {
+              this.msgError(x);
+            }
+          }, (err) => {
+            this.msgError(err);
+          });
+      }
+    });
+  }
 
   validateDriver(_driver) {
     this._loginService.setIdSelectedUser(_driver.id);

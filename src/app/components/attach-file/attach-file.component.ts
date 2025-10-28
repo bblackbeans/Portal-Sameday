@@ -137,7 +137,12 @@ export class AttachFileComponent implements OnInit, OnDestroy {
         },
           (err) => {
             this._attachFileService[category].emit(false);
-            this.msgError(err);
+            // Melhorar tratamento de erro para upload
+            if (err && err.status === 404) {
+              this._modalAlertService.alertModal('Ops!', 'Erro ao localizar arquivo, verifique sua conexão com a Internet e tente novamente.');
+            } else {
+              this.msgError(err);
+            }
           });
     } else {
       this._modalAlertService.alertModal('Ops!', 'Esse tipo de arquivo não é válido!');

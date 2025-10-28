@@ -109,7 +109,13 @@ export class DashboardComponent implements OnInit {
     this._dashboardService.getDashboardData()
       .subscribe((x) => {
         if (x.status === 'success') {
-          this.totals = x.totals;
+          // Tratar caso API retorne null ou undefined
+          if (x.totals) {
+            this.totals = x.totals;
+          } else {
+            // Se não tiver dados, manter totals vazio
+            this.totals = new TotalsReset();
+          }
 
           setTimeout(() => {
             this[_loading] = false;
@@ -119,7 +125,9 @@ export class DashboardComponent implements OnInit {
           this[_loading] = false;
         }
       }, (err) => {
-        this.msgError(err);
+        // Tratar erro de forma não-bloqueante
+        console.warn('Erro ao carregar dados do dashboard:', err);
+        this.totals = new TotalsReset();
         this[_loading] = false;
       });
   }
