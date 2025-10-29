@@ -1,17 +1,17 @@
 <h1 class="title">
     Recuperar Senha
     <div class="msg">
-        Informe o e-mail de sua conta<br />
-        Nós vamos te enviar um código por e-mail
+        Informe o telefone de sua conta<br />
+        Nós vamos te enviar um código por SMS
     </div>
 </h1>
 <div class="col-md-12">
     <div class="col-12">
-        <!-- Email -->
+        <!-- Phone -->
         <mat-form-field appearance="outline">
-            <mat-icon matPrefix>email</mat-icon>
-            <mat-label>E-mail</mat-label>
-            <input type="email" matInput [(ngModel)]="auth.email" autocomplete="email" required>
+            <mat-icon matPrefix>perm_phone_msg</mat-icon>
+            <mat-label>Telefone</mat-label>
+            <input type="text" matInput [(ngModel)]="auth.phone" mask="(00) 0000-0000||(00) 0 0000-賓0" autocomplete="off" required>
         </mat-form-field>
 
         <div class="button-container">
