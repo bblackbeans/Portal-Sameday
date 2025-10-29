@@ -138,11 +138,23 @@ export class AttachFileComponent implements OnInit, OnDestroy {
           (err) => {
             this._attachFileService[category].emit(false);
             // Melhorar tratamento de erro para upload
+            let errorMessage = 'Erro ao fazer upload do arquivo.';
+            
             if (err && err.status === 404) {
-              this._modalAlertService.alertModal('Ops!', 'Erro ao localizar arquivo, verifique sua conexão com a Internet e tente novamente.');
-            } else {
-              this.msgError(err);
+              errorMessage = 'Serviço de upload não encontrado. Verifique se a API está funcionando corretamente.';
+            } else if (err && err.status === 413) {
+              errorMessage = 'Arquivo muito grande. Por favor, escolha um arquivo menor.';
+            } else if (err && err.status === 415) {
+              errorMessage = 'Tipo de arquivo não suportado. Use apenas JPG, PNG, PDF, TXT ou DOCX.';
+            } else if (err && err.error) {
+              if (err.error.message) {
+                errorMessage = err.error.message;
+              } else if (typeof err.error === 'string') {
+                errorMessage = err.error;
+              }
             }
+            
+            this._modalAlertService.alertModal('Ops!', errorMessage);
           });
     } else {
       this._modalAlertService.alertModal('Ops!', 'Esse tipo de arquivo não é válido!');

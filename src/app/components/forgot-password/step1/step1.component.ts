@@ -6,7 +6,7 @@ import { ModalAlertService } from 'src/app/shared/modal-alert.service';
 import { DynamicMessageService } from 'src/app/shared/dynamic-message.service';
 
 interface IAuth {
-  phone: string
+  email: string  // Mudança: usar email ao invés de phone
 }
 
 @Component({
@@ -16,7 +16,7 @@ interface IAuth {
 })
 export class Step1Component implements OnInit {
 
-  public auth: IAuth = { phone: '' };
+  public auth: IAuth = { email: '' };  // Mudança: usar email
   public loading: boolean = false;
 
   constructor(
@@ -51,9 +51,10 @@ export class Step1Component implements OnInit {
   }
 
   public isValid(): boolean {
-    const { phone } = this.auth;
+    const { email } = this.auth;
 
-    if (this._functions.validatePhone(phone)) {
+    // Mudança: validar email ao invés de telefone
+    if (this._functions.validateEmail(email)) {
       return true;
     }
 

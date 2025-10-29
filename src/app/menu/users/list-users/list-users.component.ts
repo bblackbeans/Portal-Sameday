@@ -40,23 +40,6 @@ export class ListUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers('pageLoading');
-    
-    // Listener para o modal de confirmação
-    this._modalAlertService.returnEvent.subscribe((returnModal) => {
-      if (returnModal && returnModal.event === 'yes' && returnModal.action.action === 'excluirUsuario') {
-        this._usersService.deleteUser(returnModal.action.value)
-          .subscribe((x) => {
-            if (x.status === 'success') {
-              this._modalAlertService.alertModal('Sucesso!', 'Usuário excluído com sucesso.');
-              this.getUsers('listLoading');
-            } else if (x.status === 'error') {
-              this.msgError(x);
-            }
-          }, (err) => {
-            this.msgError(err);
-          });
-      }
-    });
   }
 
   applyFilter(filterValue: string, action?: string) {
@@ -118,13 +101,26 @@ export class ListUsersComponent implements OnInit {
   }
 
   deleteUser(id) {
-    this._modalAlertService.alertModal(
+    this._modalAlertService.confirmModal(
       'Confirmar Exclusão',
       'Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.',
-      'yesno',
-      'excluirUsuario',
-      id
-    );
+      'Excluir',
+      'Cancelar'
+    ).subscribe((result) => {
+      if (result) {
+        this._usersService.deleteUser(id)
+          .subscribe((x) => {
+            if (x.status === 'success') {
+              this._modalAlertService.alertModal('Sucesso!', 'Usuário excluído com sucesso.');
+              this.getUsers('listLoading');
+            } else if (x.status === 'error') {
+              this.msgError(x);
+            }
+          }, (err) => {
+            this.msgError(err);
+          });
+      }
+    });
   }
 
   validateDriver(_driver) {

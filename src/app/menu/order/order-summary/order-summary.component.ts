@@ -147,12 +147,28 @@ export class OrderSummaryComponent implements OnInit {
           }, 200);
 
         } else if (x.status === 'error') {
-          this.msgError(x);
+          // Melhorar mensagem de erro
+          const errorMsg = x.message || 'Erro ao processar pagamento. Verifique os dados e tente novamente.';
+          this.msgError({...x, message: errorMsg});
         }
       }, (err) => {
         this.loading$.next(false);
-        console.log(err);
-        this.msgError(err);
+        console.error('Erro ao processar pagamento:', err);
+        
+        // Tratamento específico de erros
+        let errorMessage = 'Erro desconhecido ao processar pagamento.';
+        
+        if (err && err.error) {
+          if (err.error.message) {
+            errorMessage = err.error.message;
+          } else if (typeof err.error === 'string') {
+            errorMessage = err.error;
+          }
+        } else if (err && err.message) {
+          errorMessage = err.message;
+        }
+        
+        this.msgError({status: 'error', message: errorMessage});
       }
     );
   }
