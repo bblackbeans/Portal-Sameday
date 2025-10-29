@@ -1,8 +1,9 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, OnDestroy } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { ModalAlertService } from 'src/app/shared/modal-alert.service';
 import { LoginService } from 'src/app/components/login/login.service';
 import { FunctionsService } from 'src/app/shared/functions.service';
@@ -15,7 +16,7 @@ import { Totals } from '../models/totals';
   templateUrl: './list-users.component.html',
   styleUrls: ['./list-users.component.scss']
 })
-export class ListUsersComponent implements OnInit {
+export class ListUsersComponent implements OnInit, OnDestroy {
 
   displayedColumns: string[] = ['typeUser', 'name', 'cpfcnpj', 'phone', 'status', 'actions'];
   dataSource: MatTableDataSource<any> = new MatTableDataSource<any>();
@@ -29,6 +30,8 @@ export class ListUsersComponent implements OnInit {
   public dataUsers: any;
 
   public totals: Totals = new TotalsReset();
+  
+  private listenModalAlert: Subscription;
 
   constructor(
     private _routerModule: Router,
@@ -40,6 +43,16 @@ export class ListUsersComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsers('pageLoading');
+    // Escutar eventos do modal de confirmação
+    this.listenModalAlert = this._modalAlertService.returnEvent.subscribe((returnModal) => {
+      this.listenModal(returnModal);
+    });
+  }
+
+  ngOnDestroy(): void {
+    if (this.listenModalAlert) {
+      this.listenModalAlert.unsubscribe();
+    }
   }
 
   applyFilter(filterValue: string, action?: string) {
@@ -101,26 +114,31 @@ export class ListUsersComponent implements OnInit {
   }
 
   deleteUser(id) {
-    this._modalAlertService.confirmModal(
+    // Usar alertModal com 'yesno' para confirmação (padrão do sistema)
+    this._modalAlertService.alertModal(
       'Confirmar Exclusão',
       'Tem certeza que deseja excluir este usuário? Esta ação não pode ser desfeita.',
-      'Excluir',
-      'Cancelar'
-    ).subscribe((result) => {
-      if (result) {
-        this._usersService.deleteUser(id)
-          .subscribe((x) => {
-            if (x.status === 'success') {
-              this._modalAlertService.alertModal('Sucesso!', 'Usuário excluído com sucesso.');
-              this.getUsers('listLoading');
-            } else if (x.status === 'error') {
-              this.msgError(x);
-            }
-          }, (err) => {
-            this.msgError(err);
-          });
-      }
-    });
+      'yesno',
+      'deleteUser',
+      id
+    );
+  }
+
+  private listenModal(_returnModal): void {
+    if (_returnModal && _returnModal.event === 'yes' && _returnModal.action.action === 'deleteUser') {
+      const userId = _returnModal.action.value;
+      this._usersService.deleteUser(userId)
+        .subscribe((x) => {
+          if (x.status === 'success') {
+            this._modalAlertService.alertModal('Sucesso!', 'Usuário excluído com sucesso.');
+            this.getUsers('listLoading');
+          } else if (x.status === 'error') {
+            this.msgError(x);
+          }
+        }, (err) => {
+          this.msgError(err);
+        });
+    }
   }
 
   validateDriver(_driver) {
