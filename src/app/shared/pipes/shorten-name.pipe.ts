@@ -11,9 +11,11 @@ export class ShortenNamePipe implements PipeTransform {
   ) { }
 
   transform(value: string): string {
-    const spl = value ? value.split(' ') : '';
+    const safeValue = typeof value === 'string' ? value : '';
+    const spl = safeValue ? safeValue.split(' ') : [];
 
-    return this._functionsService.convertFirstLetterWord(spl.length > 1 ? spl[0] + ' ' + spl[spl.length - 1] : value);
+    const shortened = spl.length > 1 ? `${spl[0]} ${spl[spl.length - 1]}` : safeValue;
+    return this._functionsService.convertFirstLetterWord(shortened);
   }
 
 }
