@@ -38,6 +38,9 @@ export class FunctionsService {
   * Convert base64 to Blob
   */
   public b64toBlob(b64Data, contentType = '', sliceSize = 512): Blob {
+    if (!b64Data || typeof b64Data !== 'string') {
+      return new Blob([], { type: contentType });
+    }
     let fileData = b64Data.split(',')[1];
 
     if (!fileData) {
