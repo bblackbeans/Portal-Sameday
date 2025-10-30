@@ -59,10 +59,11 @@ export class DriverRankingComponent implements OnInit {
     this.financialService.getDriverRanking(this.monthRef).subscribe(
       x => {
         if (x.status == "success") {
-          this.dataSource = x.data.listDrivers;
-          if (!this.dataSource || this.dataSource.length === 0) {
+          const list = x.data.listDrivers || [];
+          if (!list || list.length === 0) {
             this._modalAlertService.alertModal('Sem dados', 'Sem dados para o período selecionado.');
           }
+          this.dataSource = list;
           this[_loading] = false;
         }
         else if (x.status === 'error') {

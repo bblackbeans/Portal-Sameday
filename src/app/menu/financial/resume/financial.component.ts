@@ -89,10 +89,11 @@ export class FinancialComponent implements OnInit {
           this[_loading] = false;
 
           this.cardData = x.data.cards;
-          this.dataSource = x.data.listDrivers;
-          if (!this.dataSource || this.dataSource.length === 0) {
+          const list = x.data.listDrivers || [];
+          if (!list || list.length === 0) {
             this._modalAlertService.alertModal('Sem dados', 'Sem dados para o período selecionado.');
           }
+          this.dataSource = list;
           
           if(x.data.chartData.labels) {
             this.barChartLabels = x.data.chartData.labels;
