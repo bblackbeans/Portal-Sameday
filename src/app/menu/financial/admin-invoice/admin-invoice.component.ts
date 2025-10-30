@@ -60,6 +60,9 @@ export class AdminInvoiceComponent implements OnInit {
       x => {
         if (x.status == "success") {
           this.dataSource = x.data.listDrivers;
+          if (!this.dataSource || this.dataSource.length === 0) {
+            this._modalAlertService.alertModal('Sem dados', 'Sem dados para o período selecionado.');
+          }
           this[_loading] = false;
         }
         else if (x.status === 'error') {

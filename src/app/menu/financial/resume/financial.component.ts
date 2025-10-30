@@ -90,6 +90,9 @@ export class FinancialComponent implements OnInit {
 
           this.cardData = x.data.cards;
           this.dataSource = x.data.listDrivers;
+          if (!this.dataSource || this.dataSource.length === 0) {
+            this._modalAlertService.alertModal('Sem dados', 'Sem dados para o período selecionado.');
+          }
           
           if(x.data.chartData.labels) {
             this.barChartLabels = x.data.chartData.labels;
