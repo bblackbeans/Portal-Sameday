@@ -60,9 +60,6 @@ export class DriverRankingComponent implements OnInit {
       x => {
         if (x.status == "success") {
           const list = x.data.listDrivers || [];
-          if (!list || list.length === 0) {
-            this._modalAlertService.alertModal('Sem dados', 'Sem dados para o período selecionado.');
-          }
           this.dataSource = list;
           this[_loading] = false;
         }
